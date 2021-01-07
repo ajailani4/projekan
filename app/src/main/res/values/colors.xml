@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#FB9241</color>
+    <color name="colorPrimaryDark">#C5671F</color>
+    <color name="colorPlatform">#2EC56C</color>
+    <color name="colorPlatformText">#006429</color>
+    <color name="colorCategory">#FF9D6C</color>
+    <color name="colorCategoryText">#A53A05</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="colorProjectDesc">#7D7D7D</color>
+    <color name="colorDeadline">#727272</color>
+</resources>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Projekan</string>
+    <string name="login">Login</string>
+    <string name="lets_manage">Let’s manage your projects</string>
+    <string name="login_with_google">Login with Google</string>
+    <string name="see_your_project">See your projects here</string>
+    <string name="deadline">Deadline:</string>
+    <string name="this_week_deadline">This week deadline</string>
+    <string name="my_projects">My Projects</string>
+</resources>
