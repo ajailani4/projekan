@@ -1,5 +1,6 @@
 package com.ajailani.projekan.data.model
 
 data class Task(
-    val title: String = ""
+    val title: String,
+    val status: String
 )

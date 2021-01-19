@@ -4,21 +4,25 @@ import com.squareup.moshi.Json
 
 data class Project(
     @Json(name = "id")
-    val id: Int,
+    var id: Int = 0,
     @Json(name = "icon")
-    val icon: String,
+    var icon: String = "",
     @Json(name = "title")
-    val title: String,
+    var title: String = "",
     @Json(name = "desc")
-    val desc: String,
+    var desc: String = "",
     @Json(name = "platform")
-    val platform: String,
+    var platform: String = "",
     @Json(name = "category")
-    val category: String,
+    var category: String = "",
     @Json(name = "deadline")
-    val deadline: String,
+    var deadline: String = "",
     @Json(name = "progress")
-    val progress: Float,
+    var progress: Float = 0F,
+    @Json(name = "status")
+    var status: String = "undone",
+    @Json(name = "onPage")
+    var onPage: Int = 0,
     @Json(name = "task")
-    val task: Task?
+    var task: Task? = null
 )

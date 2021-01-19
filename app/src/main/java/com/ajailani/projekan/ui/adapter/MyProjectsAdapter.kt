@@ -1,6 +1,7 @@
 package com.ajailani.projekan.ui.adapter
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
@@ -9,7 +10,7 @@ import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.databinding.ListMyProjectsBinding
 import com.bumptech.glide.Glide
 
-class MyProjectsAdapter : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolder>(DataDifferentiator) {
+class MyProjectsAdapter(private val listener: (Project) -> Unit) : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolder>(DataDifferentiator) {
     private lateinit var binding: ListMyProjectsBinding
 
     object DataDifferentiator : DiffUtil.ItemCallback<Project>() {
@@ -24,7 +25,7 @@ class MyProjectsAdapter : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolde
     }
 
     class ViewHolder(private val binding: ListMyProjectsBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(project: Project) {
+        fun bind(project: Project, listener: (Project) -> Unit) {
             binding.apply {
                 if(project.icon != "") {
                     Glide.with(icon.context)
@@ -32,10 +33,16 @@ class MyProjectsAdapter : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolde
                         .into(icon)
                 }
 
+                if(project.status == "done") status.visibility = View.VISIBLE else status.visibility = View.INVISIBLE
+
                 title.text = project.title
                 platform.text = project.platform
                 category.text = project.category
                 deadline.text = project.deadline
+
+                root.setOnClickListener {
+                    listener(project)
+                }
             }
         }
     }
@@ -50,7 +57,7 @@ class MyProjectsAdapter : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolde
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         getItem(position)?.let { project ->
-            holder.bind(project)
+            holder.bind(project, listener)
         }
     }
 }

@@ -7,4 +7,18 @@
     <string name="deadline">Deadline:</string>
     <string name="this_week_deadline">This week deadline</string>
     <string name="my_projects">My Projects</string>
+    <string name="see_more">See more</string>
+    <string name="hello_user">Hi, %s</string>
+    <string name="add_project">Add project</string>
+    <string name="title">Title</string>
+    <string name="desc">Description</string>
+    <string name="platform">Platform</string>
+    <string name="category">Category</string>
+    <string name="deadline_input">Deadline</string>
+    <string name="project_icon">Project Icon</string>
+    <string name="add_project_icon">Add project icon</string>
+    <string name="done">Done</string>
+    <string name="please_wait">Please Wait</string>
+    <string name="no_data">No data</string>
+    <string name="add_your_projects">Let\'s add your projects</string>
 </resources>

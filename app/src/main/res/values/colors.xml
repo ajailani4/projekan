@@ -11,6 +11,9 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="colorProjectDesc">#7D7D7D</color>
+    <color name="colorShimmer">#CCCCCC</color>
+    <color name="colorGrey">#7D7D7D</color>
     <color name="colorDeadline">#727272</color>
+    <color name="colorProgBarBg">#EAEAEA</color>
+    <color name="colorChipStroke">#A5A5A5</color>
 </resources>

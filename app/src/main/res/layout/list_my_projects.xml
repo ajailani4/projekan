@@ -4,12 +4,13 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:clickable="true"
     android:layout_marginTop="10dp"
     android:layout_marginBottom="10dp"
     android:layout_marginStart="20dp"
     android:layout_marginEnd="20dp"
+    android:clickable="true"
     android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
     app:cardElevation="5dp"
     app:cardCornerRadius="20dp">
 
@@ -47,7 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="90dp"
             android:layout_marginTop="20dp"
-            android:layout_marginEnd="25dp"
+            android:layout_marginEnd="60dp"
             android:fontFamily="@font/open_sans_semibold"
             android:textColor="@android:color/black"
             android:textSize="16sp"
@@ -56,9 +57,21 @@
             app:layout_constraintTop_toTopOf="parent"
             tools:text="ProjectMan" />
 
+        <!-- Status -->
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/status"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginEnd="20dp"
+            android:src="@drawable/ic_check"
+            android:visibility="invisible"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
         <!-- Platform -->
-        <LinearLayout
-            android:id="@+id/platformLayout"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/platform"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="90dp"
@@ -69,23 +82,16 @@
             android:paddingTop="5dp"
             android:paddingEnd="10dp"
             android:paddingBottom="5dp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:textColor="@color/colorPlatformText"
+            android:textSize="13sp"
+            tools:text="Android"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/title">
-
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/platform"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/open_sans_semibold"
-                android:textColor="@color/colorPlatformText"
-                android:textSize="13sp"
-                tools:text="Android" />
-
-        </LinearLayout>
+            app:layout_constraintTop_toBottomOf="@+id/title" />
 
         <!-- Category -->
-        <LinearLayout
-            android:id="@+id/categoryLayout"
+        <androidx.appcompat.widget.AppCompatTextView
+            android:id="@+id/category"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
@@ -97,21 +103,16 @@
             android:paddingTop="5dp"
             android:paddingEnd="10dp"
             android:paddingBottom="5dp"
+            android:fontFamily="@font/open_sans_semibold"
+            android:textColor="@color/colorCategoryText"
+            android:textSize="13sp"
+            tools:text="Application"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toEndOf="@+id/platformLayout"
+            app:layout_constraintStart_toEndOf="@+id/platform"
             app:layout_constraintTop_toBottomOf="@+id/title">
 
-            <androidx.appcompat.widget.AppCompatTextView
-                android:id="@+id/category"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/open_sans_semibold"
-                android:textColor="@color/colorCategoryText"
-                android:textSize="13sp"
-                tools:text="Application" />
-
-        </LinearLayout>
+        </androidx.appcompat.widget.AppCompatTextView>
 
         <!-- Deadline -->
         <androidx.appcompat.widget.AppCompatTextView
@@ -124,10 +125,10 @@
             android:fontFamily="@font/open_sans_semibold"
             android:text="@string/deadline"
             android:textColor="@color/colorDeadline"
-            android:textSize="14sp"
+            android:textSize="13sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/platformLayout"
+            app:layout_constraintTop_toBottomOf="@+id/platform"
             app:layout_constraintVertical_bias="0.0" />
 
         <androidx.appcompat.widget.AppCompatTextView
@@ -139,10 +140,11 @@
             android:layout_marginEnd="25dp"
             android:fontFamily="@font/open_sans_semibold"
             android:textColor="@android:color/black"
+            android:textSize="13sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
-            app:layout_constraintTop_toBottomOf="@+id/categoryLayout"
+            app:layout_constraintTop_toBottomOf="@+id/category"
             tools:text="20 Jan 2021" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
