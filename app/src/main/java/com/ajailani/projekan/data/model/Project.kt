@@ -5,6 +5,8 @@ import com.squareup.moshi.Json
 data class Project(
     @Json(name = "id")
     var id: Int = 0,
+    @Json(name = "itemNum")
+    var itemNum: Int = 0,
     @Json(name = "icon")
     var icon: String = "",
     @Json(name = "title")
@@ -18,7 +20,7 @@ data class Project(
     @Json(name = "deadline")
     var deadline: String = "",
     @Json(name = "progress")
-    var progress: Float = 0F,
+    var progress: Int = 0,
     @Json(name = "status")
     var status: String = "undone",
     @Json(name = "onPage")

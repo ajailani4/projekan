@@ -17,6 +17,14 @@ interface ApiService {
         @Path("page") page: String
     ): Response<Int?>
 
+    //Get project id
+    @GET("{userId}/projects/{page}/data/{itemNum}/id.json")
+    suspend fun getProjectId(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Path("itemNum") itemNum: Int,
+    ): Response<Int?>
+
     //Get projects list
     @GET("{userId}/projects/{page}/data.json")
     suspend fun getMyProjects(
@@ -24,14 +32,13 @@ interface ApiService {
         @Path("page") page: String
     ): Response<List<Project>>
 
-    //Get project id
-    @GET("{userId}/projects/{page}/data/{item}/id.json")
-    suspend fun getProjectId(
+    //Get project details
+    @GET("{userId}/projects/{page}/data/{itemNum}.json")
+    suspend fun getProjectDetails(
         @Path("userId") userId: String,
         @Path("page") page: String,
-        @Path("item") item: Int,
-    ): Response<Int?>
-
+        @Path("itemNum") itemNum: Int
+    ): Response<Project?>
 
     /** Add project */
 
@@ -52,11 +59,11 @@ interface ApiService {
     ): Response<Void>
 
     //Put new project
-    @PUT("{userId}/projects/{page}/data/{item}.json")
+    @PUT("{userId}/projects/{page}/data/{itemNum}.json")
     suspend fun putProject(
         @Path("userId") userId: String,
         @Path("page") page: String,
-        @Path("item") item: Int,
+        @Path("itemNum") itemNum: Int,
         @Body project: Project
     ): Response<Void>
 
@@ -70,11 +77,11 @@ interface ApiService {
     ): Response<Void>
 
     //Patch new project
-    @PATCH("{userId}/projects/{page}/data/{item}.json")
+    @PATCH("{userId}/projects/{page}/data/{itemNum}.json")
     suspend fun patchProject(
         @Path("userId") userId: String,
         @Path("page") page: String,
-        @Path("item") item: Int,
+        @Path("itemNum") itemNum: Int,
         @Body project: Project
     ): Response<Void>
 }

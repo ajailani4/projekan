@@ -10,7 +10,7 @@ import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.databinding.ListMyProjectsBinding
 import com.bumptech.glide.Glide
 
-class MyProjectsAdapter(private val listener: (Project) -> Unit) : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolder>(DataDifferentiator) {
+class MyProjectsAdapter(private val listener: (Int, Int) -> Unit) : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolder>(DataDifferentiator) {
     private lateinit var binding: ListMyProjectsBinding
 
     object DataDifferentiator : DiffUtil.ItemCallback<Project>() {
@@ -25,7 +25,7 @@ class MyProjectsAdapter(private val listener: (Project) -> Unit) : PagingDataAda
     }
 
     class ViewHolder(private val binding: ListMyProjectsBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(project: Project, listener: (Project) -> Unit) {
+        fun bind(project: Project, listener: (Int, Int) -> Unit) {
             binding.apply {
                 if(project.icon != "") {
                     Glide.with(icon.context)
@@ -41,7 +41,7 @@ class MyProjectsAdapter(private val listener: (Project) -> Unit) : PagingDataAda
                 deadline.text = project.deadline
 
                 root.setOnClickListener {
-                    listener(project)
+                    listener(project.onPage, project.itemNum)
                 }
             }
         }

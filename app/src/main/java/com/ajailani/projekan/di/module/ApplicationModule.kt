@@ -43,4 +43,9 @@ class ApplicationModule {
     @Singleton
     fun provideFirebaseStorage(): FirebaseStorage =
         FirebaseStorage.getInstance()
+
+    @Provides
+    @Singleton
+    fun provedDatabaseReference(): DatabaseReference =
+        FirebaseDatabase.getInstance().reference
 }

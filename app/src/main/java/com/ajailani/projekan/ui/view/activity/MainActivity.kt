@@ -101,8 +101,12 @@ class MainActivity : AppCompatActivity() {
         //Show my projects list
         lifecycleScope.launch {
             homeViewModel.getMyProjects()?.observe(this@MainActivity, { myProjects ->
-                myProjectsAdapter = MyProjectsAdapter { project ->
+                myProjectsAdapter = MyProjectsAdapter { page, itemNum ->
                     //Go to ProjectDetailsActivity
+                    val projectDetailsIntent = Intent(applicationContext, ProjectDetailsActivity::class.java)
+                    projectDetailsIntent.putExtra("page", page)
+                    projectDetailsIntent.putExtra("itemNum", itemNum)
+                    startActivity(projectDetailsIntent)
                 }
 
                 binding.myProjectsRv.apply {

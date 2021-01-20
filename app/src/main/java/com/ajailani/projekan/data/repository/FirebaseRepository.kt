@@ -15,6 +15,10 @@ import com.ajailani.projekan.data.model.Page
 import com.ajailani.projekan.data.model.Project
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -26,9 +30,10 @@ import javax.inject.Inject
 import kotlin.collections.HashMap
 
 class FirebaseRepository @Inject constructor(
+    private val apiService: ApiService,
     private val firebaseAuth: FirebaseAuth,
     private val firebaseStorage: FirebaseStorage,
-    private val apiService: ApiService
+    private val dbReference: DatabaseReference
 ) {
     //Check user authentication
     fun checkUserAuth(): LiveData<Boolean> {
@@ -115,7 +120,7 @@ class FirebaseRepository @Inject constructor(
     }
 
     //Add project
-    fun addProject(project: Project, iconUrl: String): LiveData<Boolean> =
+    fun addProject(project: Project, iconUrl: String) =
         liveData(Dispatchers.IO) {
             val isSuccessful: Boolean
 
@@ -150,6 +155,7 @@ class FirebaseRepository @Inject constructor(
                 )
 
                 //Put new project
+                project.itemNum = 0
                 project.onPage = totalPage+1
                 isSuccessful = apiService.putProject(
                     firebaseAuth.currentUser!!.uid, "page${totalPage+1}", 0, project
@@ -164,9 +170,10 @@ class FirebaseRepository @Inject constructor(
                 )
 
                 //Patch new project
+                project.itemNum = totalItem
                 project.onPage = totalPage
                 isSuccessful = apiService.patchProject(
-                    firebaseAuth.currentUser!!.uid, "page${totalPage}", totalItem, project
+                    firebaseAuth.currentUser!!.uid, "page$totalPage", totalItem, project
                 ).isSuccessful
             }
 
@@ -193,5 +200,40 @@ class FirebaseRepository @Inject constructor(
             }
 
         return uploadProjectIcon
+    }
+
+    //Get project details
+    fun getProjectDetails(page: Int, itemNum: Int) =
+        liveData(Dispatchers.IO) {
+            val project = apiService.getProjectDetails(
+                firebaseAuth.currentUser!!.uid, "page$page", itemNum
+            ).body()
+
+            emit(project)
+        }
+
+    //Get project progress real-time
+    fun getProjectProgress(page: Int, itemNum: Int): LiveData<Int> {
+        val project = MutableLiveData<Int>()
+
+        dbReference.child(firebaseAuth.currentUser!!.uid)
+            .child("projects")
+            .child("page$page")
+            .child("data")
+            .child("$itemNum")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val projectData = snapshot.getValue(Project::class.java)
+
+                    project.value = projectData?.progress
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+        return project
     }
 }

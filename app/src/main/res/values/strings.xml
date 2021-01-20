@@ -21,4 +21,6 @@
     <string name="please_wait">Please Wait</string>
     <string name="no_data">No data</string>
     <string name="add_your_projects">Let\'s add your projects</string>
+    <string name="tasks">Tasks</string>
+    <string name="progress_text">%d%%</string>
 </resources>

@@ -13,6 +13,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projekan">
         <activity
+            android:name=".ui.view.activity.ProjectDetailsActivity"
+            android:parentActivityName=".ui.view.activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.view.activity.MainActivity" />
+        </activity>
+        <activity
             android:name=".ui.view.activity.AddProjectActivity"
             android:parentActivityName=".ui.view.activity.MainActivity">
             <meta-data
@@ -32,8 +39,7 @@
         </activity>
         <activity
             android:name=".ui.view.activity.MainActivity"
-            android:launchMode="singleTop">
-        </activity>
+            android:launchMode="singleTop" />
     </application>
 
 </manifest>

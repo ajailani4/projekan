@@ -79,17 +79,15 @@
             android:fontFamily="@font/open_sans"
             android:textColor="@color/colorGrey"
             android:textSize="14sp"
+            android:ellipsize="end"
+            android:maxLines="2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/title"
-            tools:text="Project manager appaaaaaaaaa" />
+            tools:text="Project manager" />
 
         <!-- Platform -->
-
-        <!-- Category -->
-
-        <!-- Deadline -->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/platform"
             android:layout_width="wrap_content"
@@ -109,6 +107,7 @@
             app:layout_constraintTop_toBottomOf="@+id/title"
             tools:text="Android" />
 
+        <!-- Category -->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/category"
             android:layout_width="wrap_content"
@@ -133,6 +132,7 @@
 
         </androidx.appcompat.widget.AppCompatTextView>
 
+        <!-- Deadline -->
         <androidx.appcompat.widget.AppCompatTextView
             android:id="@+id/appCompatTextView"
             android:layout_width="wrap_content"
@@ -153,7 +153,7 @@
             android:id="@+id/deadline"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="10dp"
+            android:layout_marginStart="8dp"
             android:layout_marginTop="15dp"
             android:layout_marginEnd="25dp"
             android:fontFamily="@font/open_sans_semibold"

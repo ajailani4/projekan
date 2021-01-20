@@ -16,4 +16,6 @@
     <color name="colorDeadline">#727272</color>
     <color name="colorProgBarBg">#EAEAEA</color>
     <color name="colorChipStroke">#A5A5A5</color>
+    <color name="colorDetailBg">#F6F7FB</color>
+    <color name="colorGreyCirProgBar">#DDD</color>
 </resources>
