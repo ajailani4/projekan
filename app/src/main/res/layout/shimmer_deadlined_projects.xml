@@ -46,7 +46,7 @@
             tools:text="ProjectMan" />
 
         <!-- Desc -->
-        <androidx.appcompat.widget.AppCompatTextView
+        <View
             android:id="@+id/desc"
             android:layout_width="100dp"
             android:layout_height="10dp"

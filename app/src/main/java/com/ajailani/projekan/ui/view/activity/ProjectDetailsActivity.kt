@@ -2,6 +2,7 @@ package com.ajailani.projekan.ui.view.activity
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.activity.viewModels
 import com.ajailani.projekan.R
 import com.ajailani.projekan.databinding.ActivityProjectDetailsBinding
@@ -30,7 +31,42 @@ class ProjectDetailsActivity : AppCompatActivity() {
         page = intent.extras?.getInt("page")!!
         itemNum = intent.extras?.getInt("itemNum")!!
 
+        setupLoadingUI()
         setupView()
+    }
+
+    private fun setupLoadingUI() {
+        binding.apply {
+            shimmerLayout.visibility = View.VISIBLE
+            shimmerLayout.startShimmerAnimation()
+
+            icon.visibility = View.INVISIBLE
+            title.visibility = View.INVISIBLE
+            desc.visibility = View.INVISIBLE
+            platform.visibility = View.INVISIBLE
+            category.visibility = View.INVISIBLE
+            progress.visibility = View.INVISIBLE
+            progressText.visibility = View.INVISIBLE
+            deadlineTitleTv.visibility = View.INVISIBLE
+            deadline.visibility = View.INVISIBLE
+        }
+    }
+
+    private fun setupLoadedUI() {
+        binding.apply {
+            shimmerLayout.stopShimmerAnimation()
+            shimmerLayout.visibility = View.GONE
+
+            icon.visibility = View.VISIBLE
+            title.visibility = View.VISIBLE
+            desc.visibility = View.VISIBLE
+            platform.visibility = View.VISIBLE
+            category.visibility = View.VISIBLE
+            progress.visibility = View.VISIBLE
+            progressText.visibility = View.VISIBLE
+            deadlineTitleTv.visibility = View.VISIBLE
+            deadline.visibility = View.VISIBLE
+        }
     }
 
     private fun setupView() {
@@ -47,6 +83,8 @@ class ProjectDetailsActivity : AppCompatActivity() {
                 platform.text = project?.platform
                 category.text = project?.category
                 deadline.text = project?.deadline
+
+                setupLoadedUI()
             }
         })
 

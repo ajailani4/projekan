@@ -155,7 +155,7 @@
 
         <!-- Deadline -->
         <androidx.appcompat.widget.AppCompatTextView
-            android:id="@+id/appCompatTextView"
+            android:id="@+id/deadlineTitleTv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -179,7 +179,7 @@
             android:fontFamily="@font/open_sans_semibold"
             android:textColor="@android:color/black"
             android:textSize="13sp"
-            app:layout_constraintStart_toEndOf="@+id/appCompatTextView"
+            app:layout_constraintStart_toEndOf="@+id/deadlineTitleTv"
             app:layout_constraintTop_toBottomOf="@+id/category"
             tools:text="20 Jan 2021" />
 
@@ -225,5 +225,17 @@
         app:backgroundTint="@color/colorPrimary"
         app:tint="@android:color/white"
         app:elevation="0dp" />
+
+    <com.facebook.shimmer.ShimmerFrameLayout
+        android:id="@+id/shimmerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <include
+            layout="@layout/shimmer_project_details" />
+
+    </com.facebook.shimmer.ShimmerFrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

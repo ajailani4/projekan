@@ -29,11 +29,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        setLoadingUI()
+        setupLoadingUI()
         setupView()
     }
 
-    private fun setLoadingUI() {
+    private fun setupLoadingUI() {
         binding.apply {
             shimmerLayout.visibility = View.VISIBLE
             shimmerLayout.startShimmerAnimation()
@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setLoadedUI() {
+    private fun setupLoadedUI() {
         binding.apply {
             shimmerLayout.stopShimmerAnimation()
             shimmerLayout.visibility = View.GONE
@@ -94,7 +94,7 @@ class MainActivity : AppCompatActivity() {
                     binding.seeMoreTv.visibility = View.INVISIBLE
                 }
 
-                setLoadedUI()
+                setupLoadedUI()
             })
         }
 
