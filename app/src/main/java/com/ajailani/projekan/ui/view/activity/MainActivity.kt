@@ -131,6 +131,7 @@ class MainActivity : AppCompatActivity() {
         //Add project
         binding.addProject.setOnClickListener {
             val addProjectIntent = Intent(applicationContext, AddProjectActivity::class.java)
+            addProjectIntent.putExtra("tag", "Add")
             startActivity(addProjectIntent)
         }
     }

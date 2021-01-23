@@ -33,6 +33,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     private val REQUEST_CODE_GALLERY = 1
     private var curImageBitmap: ByteArray? = null
 
+    private var tag = ""
     private var platform = ""
     private var category = ""
     private var deadline = ""
@@ -44,8 +45,16 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
 
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.title = "Add Project"
         supportActionBar?.elevation = 0F
+
+        //Set Toolbar title
+        tag = intent.extras?.getString("tag")!!
+
+        if(tag == "Add") {
+            supportActionBar?.title = "Add Project"
+        } else if(tag == "Edit") {
+            supportActionBar?.title = "Edit Project"
+        }
 
         setupPlatformChipView()
         setupCategoryChipView()
@@ -143,10 +152,19 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
         if(!getImageBytes().contentEquals(curImageBitmap)) {
             addProjectViewModel.uploadProjectIcon(getImageBytes())?.observe(this, {
                 iconUrl = it
-                addProject(project, iconUrl)
+
+                if(tag == "Add") {
+                    addProject(project, iconUrl)
+                } else if(tag == "Edit") {
+                    editProject(project, iconUrl)
+                }
             })
         } else {
-            addProject(project, iconUrl)
+            if(tag == "Add") {
+                addProject(project, iconUrl)
+            } else if(tag == "Edit") {
+                editProject(project, iconUrl)
+            }
         }
     }
 
@@ -164,6 +182,10 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                 Toast.makeText(this, "Unsuccessfully added", Toast.LENGTH_SHORT).show()
             }
         })
+    }
+
+    private fun editProject(project: Project, iconUrl: String) {
+
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {

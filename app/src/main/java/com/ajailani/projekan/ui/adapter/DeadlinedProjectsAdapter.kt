@@ -5,15 +5,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.ajailani.projekan.data.model.Project
-import com.ajailani.projekan.databinding.ListDeadlinedProjectBinding
+import com.ajailani.projekan.databinding.ItemDeadlinedProjectBinding
 import com.bumptech.glide.Glide
 
 class DeadlinedProjectsAdapter(
-        private val deadlinedProjectsList: List<Project>
+    private val deadlinedProjectsList: List<Project>
 ) : RecyclerView.Adapter<DeadlinedProjectsAdapter.ViewHolder>() {
-    private lateinit var binding: ListDeadlinedProjectBinding
+    private lateinit var binding: ItemDeadlinedProjectBinding
 
-    class ViewHolder(private val binding: ListDeadlinedProjectBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemDeadlinedProjectBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(project: Project) {
             binding.apply {
                 if(project.icon != "") {
@@ -34,7 +34,7 @@ class DeadlinedProjectsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = ListDeadlinedProjectBinding.inflate(
+        binding = ItemDeadlinedProjectBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
         )
 

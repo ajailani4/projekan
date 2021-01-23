@@ -23,4 +23,6 @@
     <string name="add_your_projects">Let\'s add your projects</string>
     <string name="tasks">Tasks</string>
     <string name="progress_text">%d%%</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
 </resources>

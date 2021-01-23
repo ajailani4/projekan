@@ -7,11 +7,11 @@ import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ajailani.projekan.data.model.Project
-import com.ajailani.projekan.databinding.ListMyProjectsBinding
+import com.ajailani.projekan.databinding.ItemMyProjectsBinding
 import com.bumptech.glide.Glide
 
 class MyProjectsAdapter(private val listener: (Int, Int) -> Unit) : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolder>(DataDifferentiator) {
-    private lateinit var binding: ListMyProjectsBinding
+    private lateinit var binding: ItemMyProjectsBinding
 
     object DataDifferentiator : DiffUtil.ItemCallback<Project>() {
         override fun areItemsTheSame(oldItem: Project, newItem: Project): Boolean {
@@ -24,7 +24,7 @@ class MyProjectsAdapter(private val listener: (Int, Int) -> Unit) : PagingDataAd
 
     }
 
-    class ViewHolder(private val binding: ListMyProjectsBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemMyProjectsBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(project: Project, listener: (Int, Int) -> Unit) {
             binding.apply {
                 if(project.icon != "") {
@@ -48,7 +48,7 @@ class MyProjectsAdapter(private val listener: (Int, Int) -> Unit) : PagingDataAd
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = ListMyProjectsBinding.inflate(
+        binding = ItemMyProjectsBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
 

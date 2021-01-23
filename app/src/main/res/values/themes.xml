@@ -37,4 +37,9 @@
         <item name="android:textColor">@color/colorGrey</item>
     </style>
 
+    <!-- Custom BottomSheetDialog -->
+    <style name="CustomBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
 </resources>

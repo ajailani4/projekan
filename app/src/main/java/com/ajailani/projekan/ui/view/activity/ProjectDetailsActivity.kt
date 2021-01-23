@@ -6,6 +6,7 @@ import android.view.View
 import androidx.activity.viewModels
 import com.ajailani.projekan.R
 import com.ajailani.projekan.databinding.ActivityProjectDetailsBinding
+import com.ajailani.projekan.ui.view.fragment.MoreFragment
 import com.ajailani.projekan.ui.viewmodel.ProjectDetailsViewModel
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -46,6 +47,7 @@ class ProjectDetailsActivity : AppCompatActivity() {
             platform.visibility = View.INVISIBLE
             category.visibility = View.INVISIBLE
             progress.visibility = View.INVISIBLE
+            progress.progress = 0
             progressText.visibility = View.INVISIBLE
             deadlineTitleTv.visibility = View.INVISIBLE
             deadline.visibility = View.INVISIBLE
@@ -93,5 +95,12 @@ class ProjectDetailsActivity : AppCompatActivity() {
             binding.progress.progress = projectProgress
             binding.progressText.text = getString(R.string.progress_text, projectProgress)
         })
+
+        //Show MoreFragment
+        binding.moreIv.setOnClickListener {
+            MoreFragment().apply {
+                show(supportFragmentManager, MoreFragment.TAG)
+            }
+        }
     }
 }
