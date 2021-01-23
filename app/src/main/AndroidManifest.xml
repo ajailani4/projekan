@@ -20,12 +20,7 @@
                 android:value=".ui.view.activity.MainActivity" />
         </activity>
         <activity
-            android:name=".ui.view.activity.AddProjectActivity"
-            android:parentActivityName=".ui.view.activity.MainActivity">
-            <meta-data
-                android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.view.activity.MainActivity" />
-        </activity>
+            android:name=".ui.view.activity.AddProjectActivity" />
         <activity android:name=".ui.view.activity.LoginActivity" />
         <activity
             android:name=".ui.view.activity.SplashActivity"

@@ -112,7 +112,7 @@ class FirebaseRepository @Inject constructor(
     //Get my projects list with pagination
     fun getMyProjects(): LiveData<PagingData<Project>> {
         return Pager(
-            config = PagingConfig(enablePlaceholders = false, pageSize = 5),
+            config = PagingConfig(enablePlaceholders = false, pageSize = 10),
             pagingSourceFactory = {
                 MyProjectsDatasource(apiService, firebaseAuth)
             }
@@ -138,7 +138,7 @@ class FirebaseRepository @Inject constructor(
             project.id = projectId+1
             project.icon = iconUrl
 
-            if(totalItem == 0 || totalItem == 5) {
+            if(totalItem == 0 || totalItem == 10) {
                 /**Add project on the new page*/
 
                 //Update totalPage
@@ -236,4 +236,20 @@ class FirebaseRepository @Inject constructor(
 
         return project
     }
+
+    //Update project
+    fun updateProject(project: Project, iconUrl: String) =
+        liveData(Dispatchers.IO) {
+            //Update project icon if iconUrl changed
+            if(iconUrl != "") {
+                project.icon = iconUrl
+            }
+
+            //Update project
+            val isSuccessful = apiService.patchProject(
+                firebaseAuth.currentUser!!.uid, "page${project.onPage}", project.itemNum, project
+            ).isSuccessful
+
+            emit(isSuccessful)
+        }
 }

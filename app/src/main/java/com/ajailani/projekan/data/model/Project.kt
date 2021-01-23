@@ -1,7 +1,10 @@
 package com.ajailani.projekan.data.model
 
+import android.os.Parcelable
 import com.squareup.moshi.Json
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Project(
     @Json(name = "id")
     var id: Int = 0,
@@ -27,4 +30,4 @@ data class Project(
     var onPage: Int = 0,
     @Json(name = "task")
     var task: Task? = null
-)
+) : Parcelable

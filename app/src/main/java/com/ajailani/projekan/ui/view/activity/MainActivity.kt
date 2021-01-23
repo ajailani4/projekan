@@ -80,7 +80,13 @@ class MainActivity : AppCompatActivity() {
                     binding.noDataTv.visibility = View.GONE
                     binding.seeMoreTv.visibility = View.VISIBLE
 
-                    deadlinedProjectsAdapter = DeadlinedProjectsAdapter(deadlinedProjects)
+                    deadlinedProjectsAdapter = DeadlinedProjectsAdapter(deadlinedProjects) { page, itemNum ->
+                        //Go to ProjectDetailsActivity
+                        val projectDetailsIntent = Intent(applicationContext, ProjectDetailsActivity::class.java)
+                        projectDetailsIntent.putExtra("page", page)
+                        projectDetailsIntent.putExtra("itemNum", itemNum)
+                        startActivity(projectDetailsIntent)
+                    }
 
                     binding.deadlinedProjectsRv.apply {
                         layoutManager = LinearLayoutManager(

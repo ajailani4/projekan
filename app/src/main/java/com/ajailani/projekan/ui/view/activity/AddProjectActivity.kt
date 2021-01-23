@@ -4,10 +4,12 @@ import android.app.DatePickerDialog
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
@@ -19,6 +21,11 @@ import com.ajailani.projekan.databinding.ActivityAddProjectBinding
 import com.ajailani.projekan.ui.viewmodel.AddProjectViewModel
 import com.ajailani.projekan.utils.CategoryList
 import com.ajailani.projekan.utils.PlatformList
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.google.android.material.chip.Chip
 import dagger.hilt.android.AndroidEntryPoint
 import java.io.ByteArrayOutputStream
@@ -34,6 +41,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     private var curImageBitmap: ByteArray? = null
 
     private var tag = ""
+    private var projectEdit = Project()
     private var platform = ""
     private var category = ""
     private var deadline = ""
@@ -52,19 +60,61 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
 
         if(tag == "Add") {
             supportActionBar?.title = "Add Project"
+
+            getCurImageBitmap()
         } else if(tag == "Edit") {
             supportActionBar?.title = "Edit Project"
+
+            projectEdit = intent.extras?.get("project") as Project
+            fillTheForm(projectEdit)
         }
 
         setupPlatformChipView()
         setupCategoryChipView()
-        getCurImageBitmap()
 
         //When buttons are clicked
         binding.inputDeadline.setOnClickListener(this)
-        binding.enterDateIv.setOnClickListener(this)
+        binding.inputDeadlineIv.setOnClickListener(this)
         binding.inputProjectIcon.setOnClickListener(this)
         binding.doneBtn.setOnClickListener(this)
+    }
+
+    private fun fillTheForm(project: Project) {
+        binding.apply {
+            if(project.icon != "") {
+                Glide.with(this@AddProjectActivity)
+                    .load(project.icon)
+                    .listener(object : RequestListener<Drawable> {
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            TODO("Not yet implemented")
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            getCurImageBitmap()
+
+                            return false
+                        }
+
+                    })
+                    .into(iconIv)
+            }
+
+            inputTitle.setText(project.title)
+            inputDesc.setText(project.desc)
+            inputDeadline.setText(project.deadline)
+            deadline = project.deadline
+        }
     }
 
     private fun setupPlatformChipView() {
@@ -76,6 +126,17 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
             chip.text = chipText
 
             binding.platormChipGroup.addView(chip)
+
+            //Set checked chip if tag is "Edit"
+            if(tag == "Edit") {
+                if(chipText == projectEdit.platform) {
+                    chip.id = View.generateViewId()
+                    binding.platormChipGroup.check(chip.id)
+
+                    chip.chipStrokeWidth = 0F
+                    platform = chip.text.toString()
+                }
+            }
         }
 
         //Handling checked chips
@@ -100,6 +161,17 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
             chip.text = chipText
 
             binding.categoryChipGroup.addView(chip)
+
+            //Set checked chip if tag is "Edit"
+            if(tag == "Edit") {
+                if(chipText == projectEdit.category) {
+                    chip.id = View.generateViewId()
+                    binding.categoryChipGroup.check(chip.id)
+
+                    chip.chipStrokeWidth = 0F
+                    category = chip.text.toString()
+                }
+            }
         }
 
         //Handling checked chips
@@ -116,12 +188,13 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun getCurImageBitmap() {
-        val vto = binding.projectIconIv.viewTreeObserver
+        val vto = binding.iconIv.viewTreeObserver
 
         vto.addOnPreDrawListener(object : ViewTreeObserver.OnPreDrawListener {
             override fun onPreDraw(): Boolean {
-                binding.projectIconIv.viewTreeObserver.removeOnPreDrawListener(this)
+                binding.iconIv.viewTreeObserver.removeOnPreDrawListener(this)
                 curImageBitmap = getImageBytes()
+
                 return true
             }
         })
@@ -129,7 +202,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun getImageBytes(): ByteArray {
         //Draw view from ImageView to Bitmap
-        val bitmap = getBitmapFromView(binding.projectIconIv)
+        val bitmap = getBitmapFromView(binding.iconIv)
         val outputStream = ByteArrayOutputStream()
 
         //Compress the Bitmap to JPG with 100% image quality
@@ -146,7 +219,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
         return bitmap
     }
 
-    private fun setupAddProject(project: Project) {
+    private fun setupAddOrUpdateProject(project: Project) {
         var iconUrl = ""
 
         if(!getImageBytes().contentEquals(curImageBitmap)) {
@@ -163,7 +236,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
             if(tag == "Add") {
                 addProject(project, iconUrl)
             } else if(tag == "Edit") {
-                editProject(project, iconUrl)
+                editProject(project, projectEdit.icon)
             }
         }
     }
@@ -185,7 +258,19 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun editProject(project: Project, iconUrl: String) {
+        addProjectViewModel.updateProject(project, iconUrl)?.observe(this, { isProjectUpdated ->
+            if(isProjectUpdated) {
+                binding.progressBar.root.visibility = View.VISIBLE
+                Toast.makeText(this, "Successfully updated", Toast.LENGTH_SHORT).show()
 
+                val homeIntent = Intent(applicationContext, MainActivity::class.java)
+                startActivity(homeIntent)
+                finish()
+            } else {
+                binding.doneBtn.isEnabled = true
+                Toast.makeText(this, "Unsuccessfully updated", Toast.LENGTH_SHORT).show()
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -193,13 +278,13 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
 
         if(requestCode == REQUEST_CODE_GALLERY) {
             val uri = data?.data
-            binding.projectIconIv.setImageURI(uri)
+            binding.iconIv.setImageURI(uri)
         }
     }
 
     override fun onClick(v: View?) {
         //Show DatePickerDialog to choose deadline date
-        if(v == binding.inputDeadline || v == binding.enterDateIv) {
+        if(v == binding.inputDeadline || v == binding.inputDeadlineIv) {
             val calendar = Calendar.getInstance()
             val calYear = calendar.get(Calendar.YEAR)
             val calMonth = calendar.get(Calendar.MONTH)
@@ -232,6 +317,13 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                 project.platform = platform
                 project.category = category
                 project.deadline = deadline
+
+                //Make these same like before
+                project.id = projectEdit.id
+                project.itemNum = projectEdit.itemNum
+                project.progress = projectEdit.progress
+                project.status = projectEdit.status
+                project.onPage = projectEdit.onPage
             }
 
             if(project.title.isNotEmpty() && project.desc.isNotEmpty() && project.platform != ""
@@ -240,11 +332,19 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                 binding.progressBar.root.visibility = View.VISIBLE
                 binding.doneBtn.isEnabled = false
 
-                //This means that we have to upload the icon first, then we put/patch the new project into database
-                setupAddProject(project)
+                //This means that we have to upload the icon first, then we put/patch the new project or update the project into database
+                setupAddOrUpdateProject(project)
             } else {
                 Toast.makeText(this, "Fill the form completely", Toast.LENGTH_SHORT).show()
             }
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == android.R.id.home) {
+            onBackPressed()
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }

@@ -9,12 +9,13 @@ import com.ajailani.projekan.databinding.ItemDeadlinedProjectBinding
 import com.bumptech.glide.Glide
 
 class DeadlinedProjectsAdapter(
-    private val deadlinedProjectsList: List<Project>
+    private val deadlinedProjectsList: List<Project>,
+    private val listener: (Int, Int) -> Unit
 ) : RecyclerView.Adapter<DeadlinedProjectsAdapter.ViewHolder>() {
     private lateinit var binding: ItemDeadlinedProjectBinding
 
     class ViewHolder(private val binding: ItemDeadlinedProjectBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(project: Project) {
+        fun bind(project: Project, listener: (Int, Int) -> Unit) {
             binding.apply {
                 if(project.icon != "") {
                     Glide.with(icon.context)
@@ -29,6 +30,10 @@ class DeadlinedProjectsAdapter(
                 platform.text = project.platform
                 category.text = project.category
                 deadline.text = project.deadline
+
+                root.setOnClickListener {
+                    listener(project.onPage, project.itemNum)
+                }
             }
         }
     }
@@ -42,7 +47,7 @@ class DeadlinedProjectsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(deadlinedProjectsList[position])
+        holder.bind(deadlinedProjectsList[position], listener)
     }
 
     override fun getItemCount() = deadlinedProjectsList.size

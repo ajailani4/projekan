@@ -10,7 +10,9 @@ import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.databinding.ItemMyProjectsBinding
 import com.bumptech.glide.Glide
 
-class MyProjectsAdapter(private val listener: (Int, Int) -> Unit) : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolder>(DataDifferentiator) {
+class MyProjectsAdapter(
+    private val listener: (Int, Int) -> Unit
+) : PagingDataAdapter<Project, MyProjectsAdapter.ViewHolder>(DataDifferentiator) {
     private lateinit var binding: ItemMyProjectsBinding
 
     object DataDifferentiator : DiffUtil.ItemCallback<Project>() {

@@ -7,6 +7,7 @@ import androidx.activity.viewModels
 import com.ajailani.projekan.R
 import com.ajailani.projekan.databinding.ActivityProjectDetailsBinding
 import com.ajailani.projekan.ui.view.fragment.MoreFragment
+import com.ajailani.projekan.ui.viewmodel.MoreViewModel
 import com.ajailani.projekan.ui.viewmodel.ProjectDetailsViewModel
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
@@ -15,6 +16,7 @@ import dagger.hilt.android.AndroidEntryPoint
 class ProjectDetailsActivity : AppCompatActivity() {
     private lateinit var binding: ActivityProjectDetailsBinding
     private val projectDetailsViewModel: ProjectDetailsViewModel by viewModels()
+    private val moreViewModel: MoreViewModel by viewModels()
 
     private var page = 0
     private var itemNum = 0
@@ -86,6 +88,8 @@ class ProjectDetailsActivity : AppCompatActivity() {
                 category.text = project?.category
                 deadline.text = project?.deadline
 
+                moreViewModel.setProject(project!!)
+
                 setupLoadedUI()
             }
         })
@@ -98,6 +102,8 @@ class ProjectDetailsActivity : AppCompatActivity() {
 
         //Show MoreFragment
         binding.moreIv.setOnClickListener {
+            moreViewModel.setTag("Project")
+
             MoreFragment().apply {
                 show(supportFragmentManager, MoreFragment.TAG)
             }
