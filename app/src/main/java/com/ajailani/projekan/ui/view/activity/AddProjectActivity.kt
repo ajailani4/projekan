@@ -61,6 +61,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
         if(tag == "Add") {
             supportActionBar?.title = "Add Project"
 
+            //Get current bitmap if tag is "Add"
             getCurImageBitmap()
         } else if(tag == "Edit") {
             supportActionBar?.title = "Edit Project"
@@ -101,6 +102,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                             dataSource: DataSource?,
                             isFirstResource: Boolean
                         ): Boolean {
+                            //Get current bitmap here, if tag is "Edit". This is because Glide loads image url asynchronously
                             getCurImageBitmap()
 
                             return false

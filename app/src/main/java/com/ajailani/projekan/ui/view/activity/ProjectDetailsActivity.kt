@@ -109,4 +109,9 @@ class ProjectDetailsActivity : AppCompatActivity() {
             }
         }
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        binding.progress.progress = 0
+    }
 }

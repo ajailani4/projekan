@@ -15,8 +15,8 @@
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.appcompat.widget.AppCompatImageView
-            android:layout_width="170dp"
-            android:layout_height="170dp"
+            android:layout_width="150dp"
+            android:layout_height="150dp"
             android:background="@drawable/background_custom_progress_bar" />
 
         <ProgressBar
@@ -24,13 +24,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"
-            android:layout_marginTop="40dp" />
+            android:layout_marginTop="30dp" />
 
         <androidx.appcompat.widget.AppCompatTextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|bottom"
-            android:layout_marginBottom="45dp"
+            android:layout_marginBottom="35dp"
             android:text="@string/please_wait"
             android:textColor="@android:color/black"
             android:textSize="15sp" />
