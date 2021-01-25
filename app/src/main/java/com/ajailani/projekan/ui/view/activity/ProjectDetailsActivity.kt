@@ -14,7 +14,7 @@ import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class ProjectDetailsActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityProjectDetailsBinding
+    lateinit var binding: ActivityProjectDetailsBinding
     private val projectDetailsViewModel: ProjectDetailsViewModel by viewModels()
     private val moreViewModel: MoreViewModel by viewModels()
 
@@ -48,8 +48,8 @@ class ProjectDetailsActivity : AppCompatActivity() {
             desc.visibility = View.INVISIBLE
             platform.visibility = View.INVISIBLE
             category.visibility = View.INVISIBLE
-            progress.visibility = View.INVISIBLE
-            progress.progress = 0
+            projectProgress.visibility = View.INVISIBLE
+            projectProgress.progress = 0
             progressText.visibility = View.INVISIBLE
             deadlineTitleTv.visibility = View.INVISIBLE
             deadline.visibility = View.INVISIBLE
@@ -66,7 +66,7 @@ class ProjectDetailsActivity : AppCompatActivity() {
             desc.visibility = View.VISIBLE
             platform.visibility = View.VISIBLE
             category.visibility = View.VISIBLE
-            progress.visibility = View.VISIBLE
+            projectProgress.visibility = View.VISIBLE
             progressText.visibility = View.VISIBLE
             deadlineTitleTv.visibility = View.VISIBLE
             deadline.visibility = View.VISIBLE
@@ -96,8 +96,10 @@ class ProjectDetailsActivity : AppCompatActivity() {
 
         //Observe project progress real-time
         projectDetailsViewModel.getProjectProgress(page, itemNum)?.observe(this, { projectProgress ->
-            binding.progress.progress = projectProgress
-            binding.progressText.text = getString(R.string.progress_text, projectProgress)
+            if (projectProgress != null) {
+                binding.projectProgress.progress = projectProgress
+                binding.progressText.text = getString(R.string.progress_text, projectProgress)
+            }
         })
 
         //Show MoreFragment
@@ -112,6 +114,6 @@ class ProjectDetailsActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        binding.progress.progress = 0
+        binding.projectProgress.progress = 0
     }
 }

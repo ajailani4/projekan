@@ -144,7 +144,7 @@
 
         <!-- Progress -->
         <ProgressBar
-            android:id="@+id/progress"
+            android:id="@+id/projectProgress"
             android:layout_width="70dp"
             android:layout_height="70dp"
             android:layout_marginTop="20dp"
@@ -165,10 +165,10 @@
             android:fontFamily="@font/open_sans_semibold"
             android:textColor="@color/colorPrimary"
             android:textSize="14sp"
-            app:layout_constraintBottom_toBottomOf="@+id/progress"
-            app:layout_constraintEnd_toEndOf="@+id/progress"
-            app:layout_constraintStart_toStartOf="@+id/progress"
-            app:layout_constraintTop_toTopOf="@+id/progress"
+            app:layout_constraintBottom_toBottomOf="@+id/projectProgress"
+            app:layout_constraintEnd_toEndOf="@+id/projectProgress"
+            app:layout_constraintStart_toStartOf="@+id/projectProgress"
+            app:layout_constraintTop_toTopOf="@+id/projectProgress"
             tools:text="75%" />
 
         <!-- Deadline -->
@@ -255,5 +255,17 @@
             layout="@layout/shimmer_project_details" />
 
     </com.facebook.shimmer.ShimmerFrameLayout>
+
+    <!-- Progress Bar -->
+    <include
+        android:id="@+id/progressBar"
+        layout="@layout/custom_progress_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

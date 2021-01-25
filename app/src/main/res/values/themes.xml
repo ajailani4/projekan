@@ -40,6 +40,7 @@
     <!-- Custom BottomSheetDialog -->
     <style name="CustomBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
+        <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
 </resources>

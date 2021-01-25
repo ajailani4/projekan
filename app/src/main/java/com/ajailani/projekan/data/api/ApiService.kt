@@ -2,6 +2,7 @@ package com.ajailani.projekan.data.api
 
 import com.ajailani.projekan.data.model.Page
 import com.ajailani.projekan.data.model.Project
+import com.ajailani.projekan.data.model.ProjectList
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -42,7 +43,7 @@ interface ApiService {
 
     /** Add project */
 
-    //if totalItem is 5 then add project on the new page
+    //if totalItem is 0 or 10 then add project on the new page
     //Update totalPage
     @PATCH("{userId}/projects.json")
     suspend fun updateTotalPage(
@@ -67,7 +68,7 @@ interface ApiService {
         @Body project: Project
     ): Response<Void>
 
-    //else if totalItem less than 5 add then project on the latest page
+    //else if totalItem less than 5 then add project on the latest page
     //Patch totalItem
     @PATCH("{userId}/projects/{page}.json")
     suspend fun patchTotalItem(
@@ -83,5 +84,22 @@ interface ApiService {
         @Path("page") page: String,
         @Path("itemNum") itemNum: Int,
         @Body project: Project
+    ): Response<Void>
+
+    /** Delete Project */
+
+    //Delete page if totalItem is 1
+    @DELETE("{userId}/projects/{page}.json")
+    suspend fun deletePage(
+        @Path("userId") userId: String,
+        @Path("page") page: String
+    ): Response<Void>
+
+    //Patch new restructured project list
+    @PATCH("{userId}/projects/{page}.json")
+    suspend fun patchReProjectList(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Body data: ProjectList
     ): Response<Void>
 }

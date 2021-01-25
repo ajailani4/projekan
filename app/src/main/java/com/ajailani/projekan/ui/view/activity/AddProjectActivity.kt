@@ -102,7 +102,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                             dataSource: DataSource?,
                             isFirstResource: Boolean
                         ): Boolean {
-                            //Get current bitmap here, if tag is "Edit". This is because Glide loads image url asynchronously
+                            //Get current bitmap here, because Glide loads image url asynchronously
                             getCurImageBitmap()
 
                             return false
@@ -110,6 +110,9 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
 
                     })
                     .into(iconIv)
+            } else {
+                //Get current bitmap synchronously
+                getCurImageBitmap()
             }
 
             inputTitle.setText(project.title)
@@ -246,15 +249,19 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     private fun addProject(project: Project, iconUrl: String) {
         addProjectViewModel.addProject(project, iconUrl)?.observe(this, { isProjectAdded ->
             if(isProjectAdded) {
-                binding.progressBar.root.visibility = View.VISIBLE
                 Toast.makeText(this, "Successfully added", Toast.LENGTH_SHORT).show()
 
                 val homeIntent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(homeIntent)
                 finish()
             } else {
-                binding.doneBtn.isEnabled = true
                 Toast.makeText(this, "Unsuccessfully added", Toast.LENGTH_SHORT).show()
+
+                binding.apply {
+                    progressBar.root.visibility = View.GONE
+                    inputProjectIcon.isEnabled = true
+                    doneBtn.isEnabled = true
+                }
             }
         })
     }
@@ -262,15 +269,19 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     private fun editProject(project: Project, iconUrl: String) {
         addProjectViewModel.updateProject(project, iconUrl)?.observe(this, { isProjectUpdated ->
             if(isProjectUpdated) {
-                binding.progressBar.root.visibility = View.VISIBLE
                 Toast.makeText(this, "Successfully updated", Toast.LENGTH_SHORT).show()
 
                 val homeIntent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(homeIntent)
                 finish()
             } else {
-                binding.doneBtn.isEnabled = true
-                Toast.makeText(this, "Unsuccessfully updated", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, "Unsuccessfully added", Toast.LENGTH_SHORT).show()
+
+                binding.apply {
+                    progressBar.root.visibility = View.GONE
+                    inputProjectIcon.isEnabled = true
+                    doneBtn.isEnabled = true
+                }
             }
         })
     }
@@ -331,8 +342,11 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
             if(project.title.isNotEmpty() && project.desc.isNotEmpty() && project.platform != ""
                 && project.category != "" && project.deadline != ""
             ) {
-                binding.progressBar.root.visibility = View.VISIBLE
-                binding.doneBtn.isEnabled = false
+                binding.apply {
+                    progressBar.root.visibility = View.VISIBLE
+                    inputProjectIcon.isEnabled = false
+                    doneBtn.isEnabled = false
+                }
 
                 //This means that we have to upload the icon first, then we put/patch the new project or update the project into database
                 setupAddOrUpdateProject(project)

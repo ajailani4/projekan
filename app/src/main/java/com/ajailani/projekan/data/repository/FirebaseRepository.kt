@@ -1,7 +1,6 @@
 package com.ajailani.projekan.data.repository
 
 import android.content.Intent
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
@@ -13,6 +12,7 @@ import com.ajailani.projekan.data.api.ApiService
 import com.ajailani.projekan.data.datasource.MyProjectsDatasource
 import com.ajailani.projekan.data.model.Page
 import com.ajailani.projekan.data.model.Project
+import com.ajailani.projekan.data.model.ProjectList
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -90,14 +90,13 @@ class FirebaseRepository @Inject constructor(
 
             //Filter deadlined projects
             for (i in 0 until projectsList.size) {
-                val localeID = Locale("in", "ID")
-                val sdf = SimpleDateFormat("dd MMM yyyy", localeID)
+                val sdf = SimpleDateFormat("dd MMM yyyy", Locale.US)
                 val deadline = sdf.parse(projectsList[i].deadline)
                 val curDate = Date()
 
                 val dayDiff = TimeUnit.DAYS.convert((deadline!!.time - curDate.time), TimeUnit.MILLISECONDS)
 
-                if (dayDiff in 1..7) {
+                if (dayDiff in 0..7) {
                     deadlinedProjectsList.add(projectsList[i])
                 }
 
@@ -161,7 +160,7 @@ class FirebaseRepository @Inject constructor(
                     firebaseAuth.currentUser!!.uid, "page${totalPage+1}", 0, project
                 ).isSuccessful
             } else {
-                /**Add project on the current page*/
+                /**Add project on the latest page*/
 
                 //Patch totalItem
                 val pageBody = Page(null, totalItem+1)
@@ -213,8 +212,8 @@ class FirebaseRepository @Inject constructor(
         }
 
     //Get project progress real-time
-    fun getProjectProgress(page: Int, itemNum: Int): LiveData<Int> {
-        val project = MutableLiveData<Int>()
+    fun getProjectProgress(page: Int, itemNum: Int): LiveData<Int?> {
+        val project = MutableLiveData<Int?>()
 
         dbReference.child(firebaseAuth.currentUser!!.uid)
             .child("projects")
@@ -249,6 +248,66 @@ class FirebaseRepository @Inject constructor(
             val isSuccessful = apiService.patchProject(
                 firebaseAuth.currentUser!!.uid, "page${project.onPage}", project.itemNum, project
             ).isSuccessful
+
+            emit(isSuccessful)
+        }
+
+    //Delete project
+    fun deleteProject(project: Project) =
+        liveData(Dispatchers.IO) {
+            var isSuccessful = false
+
+            //Update totalItem
+            val totalItem = apiService.getTotalItem(
+                firebaseAuth.currentUser!!.uid, "page${project.onPage}"
+            ).body()
+
+            val pageBody = Page(null, totalItem?.minus(1))
+            apiService.patchTotalItem(
+                firebaseAuth.currentUser!!.uid, "page${project.onPage}", pageBody
+            )
+
+            //Update page
+            val totalPage = apiService.getTotalPage(firebaseAuth.currentUser!!.uid).body()
+
+            if(totalItem == 1) {
+                apiService.deletePage(
+                    firebaseAuth.currentUser!!.uid, "page${project.onPage}"
+                )
+
+                val totalPageBody = HashMap<String, Int>()
+                totalPageBody["totalPage"] = totalPage!!.minus(1)
+                apiService.updateTotalPage(
+                    firebaseAuth.currentUser!!.uid, totalPageBody
+                )
+            }
+
+            //Restructure project list and patch it
+            if(totalItem!! > 1) {
+                val projectList = apiService.getMyProjects(
+                    firebaseAuth.currentUser!!.uid, "page${project.onPage}"
+                ).body() ?: emptyList()
+
+                val tempReProjectList = mutableListOf<Project>()
+
+                for(i in projectList) {
+                    if(i.id != project.id) {
+                        if(i.itemNum > project.itemNum) {
+                            i.itemNum -= 1
+                        }
+
+                        tempReProjectList.add(i)
+                    } else {
+                        continue
+                    }
+                }
+
+                val reProjectList = ProjectList(tempReProjectList)
+
+                isSuccessful = apiService.patchReProjectList(
+                    firebaseAuth.currentUser!!.uid, "page${project.onPage}", reProjectList
+                ).isSuccessful
+            }
 
             emit(isSuccessful)
         }

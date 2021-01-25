@@ -10,7 +10,7 @@ class ProjectDetailsViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository
 ): ViewModel() {
     private var project: LiveData<Project?>? = null
-    private var projectProgress: LiveData<Int>? = null
+    private var projectProgress: LiveData<Int?>? = null
 
     fun getProjectDetails(page: Int, itemNum: Int): LiveData<Project?>?  {
         project = firebaseRepository.getProjectDetails(page, itemNum)
@@ -18,7 +18,7 @@ class ProjectDetailsViewModel @ViewModelInject constructor(
         return project
     }
 
-    fun getProjectProgress(page: Int, itemNum: Int): LiveData<Int>? {
+    fun getProjectProgress(page: Int, itemNum: Int): LiveData<Int?>? {
         projectProgress = firebaseRepository.getProjectProgress(page, itemNum)
 
         return projectProgress

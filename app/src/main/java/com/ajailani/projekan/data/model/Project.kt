@@ -28,6 +28,6 @@ data class Project(
     var status: String = "undone",
     @Json(name = "onPage")
     var onPage: Int = 0,
-    @Json(name = "task")
-    var task: Task? = null
+    @Json(name = "tasks")
+    var tasks: List<Task>? = null
 ) : Parcelable
