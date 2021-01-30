@@ -102,7 +102,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                             dataSource: DataSource?,
                             isFirstResource: Boolean
                         ): Boolean {
-                            //Get current bitmap here, because Glide loads image url asynchronously
+                            //Get current bitmap asynchronously, because Glide need to load image url
                             getCurImageBitmap()
 
                             return false
@@ -228,7 +228,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
         var iconUrl = ""
 
         if(!getImageBytes().contentEquals(curImageBitmap)) {
-            addProjectViewModel.uploadProjectIcon(getImageBytes())?.observe(this, {
+            addProjectViewModel.uploadProjectIcon(getImageBytes()).observe(this, {
                 iconUrl = it
 
                 if(tag == "Add") {
@@ -247,7 +247,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun addProject(project: Project, iconUrl: String) {
-        addProjectViewModel.addProject(project, iconUrl)?.observe(this, { isProjectAdded ->
+        addProjectViewModel.addProject(project, iconUrl).observe(this, { isProjectAdded ->
             if(isProjectAdded) {
                 Toast.makeText(this, "Successfully added", Toast.LENGTH_SHORT).show()
 
@@ -267,7 +267,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun editProject(project: Project, iconUrl: String) {
-        addProjectViewModel.updateProject(project, iconUrl)?.observe(this, { isProjectUpdated ->
+        addProjectViewModel.updateProject(project, iconUrl).observe(this, { isProjectUpdated ->
             if(isProjectUpdated) {
                 Toast.makeText(this, "Successfully updated", Toast.LENGTH_SHORT).show()
 
@@ -331,7 +331,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                 project.category = category
                 project.deadline = deadline
 
-                //Make these same like before
+                //If tag is "Edit", then make these are same like projectEdit
                 project.id = projectEdit.id
                 project.itemNum = projectEdit.itemNum
                 project.progress = projectEdit.progress

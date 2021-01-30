@@ -1,13 +1,11 @@
 package com.ajailani.projekan.ui.view.fragment
 
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.ajailani.projekan.R
@@ -15,9 +13,7 @@ import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.databinding.FragmentMoreBinding
 import com.ajailani.projekan.ui.view.activity.AddProjectActivity
 import com.ajailani.projekan.ui.view.activity.MainActivity
-import com.ajailani.projekan.ui.view.activity.ProjectDetailsActivity
 import com.ajailani.projekan.ui.viewmodel.MoreViewModel
-import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
@@ -31,13 +27,13 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
         const val TAG = "More Fragment"
     }
 
-    override fun getTheme(): Int = R.style.CustomBottomSheetDialog
+    override fun getTheme(): Int = R.style.CustomMoreDialog
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         binding = FragmentMoreBinding.inflate(
             inflater, container, false
         )
@@ -49,13 +45,13 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
         super.onViewCreated(view, savedInstanceState)
 
         //Observe tag
-        moreViewModel.tag.observe(viewLifecycleOwner, { tag ->
-            tagMore = tag
+        moreViewModel.tag.observe(viewLifecycleOwner, {
+            tagMore = it
         })
 
         //Observe project
-        moreViewModel.project.observe(viewLifecycleOwner, { project ->
-            projectMore = project
+        moreViewModel.project.observe(viewLifecycleOwner, {
+            projectMore = it
         })
 
         binding.edit.setOnClickListener(this)
@@ -83,12 +79,13 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
         builder.setTitle(R.string.delete)
             .setMessage(R.string.confirm_message)
             .setPositiveButton(R.string.yes) { _, _ ->
+                this.isCancelable = false
                 binding.progressBar.visibility = View.VISIBLE
                 binding.edit.isEnabled = false
                 binding.delete.isEnabled = false
 
                 if(tagMore == "Project") {
-                    moreViewModel.deleteProject(projectMore)?.observe(viewLifecycleOwner, { isProjectDeleted ->
+                    moreViewModel.deleteProject(projectMore).observe(viewLifecycleOwner, { isProjectDeleted ->
                         if(isProjectDeleted) {
                             Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show()
 
@@ -98,6 +95,7 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                         } else {
                             Toast.makeText(context, "Unsuccessfully deleted", Toast.LENGTH_SHORT).show()
 
+                            this.isCancelable = true
                             binding.progressBar.visibility = View.GONE
                             binding.edit.isEnabled = true
                             binding.delete.isEnabled = true

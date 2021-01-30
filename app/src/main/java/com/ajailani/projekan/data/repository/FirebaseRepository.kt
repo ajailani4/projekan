@@ -9,10 +9,11 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.ajailani.projekan.data.api.ApiService
-import com.ajailani.projekan.data.datasource.MyProjectsDatasource
+import com.ajailani.projekan.data.datasource.MyProjectsDataSource
 import com.ajailani.projekan.data.model.Page
 import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.data.model.ProjectList
+import com.ajailani.projekan.data.model.Task
 import com.firebase.ui.auth.AuthUI
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -20,9 +21,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -113,7 +112,7 @@ class FirebaseRepository @Inject constructor(
         return Pager(
             config = PagingConfig(enablePlaceholders = false, pageSize = 10),
             pagingSourceFactory = {
-                MyProjectsDatasource(apiService, firebaseAuth)
+                MyProjectsDataSource(apiService, firebaseAuth)
             }
         ).liveData
     }
@@ -125,7 +124,7 @@ class FirebaseRepository @Inject constructor(
 
             val totalPage = apiService.getTotalPage(firebaseAuth.currentUser!!.uid).body() ?: 0
 
-            val totalItem = apiService.getTotalItem(
+            val totalItem = apiService.getProjectTotalItem(
                 firebaseAuth.currentUser!!.uid, "page$totalPage"
             ).body() ?: 0
 
@@ -164,7 +163,7 @@ class FirebaseRepository @Inject constructor(
 
                 //Patch totalItem
                 val pageBody = Page(null, totalItem+1)
-                apiService.patchTotalItem(
+                apiService.patchProjectTotalItem(
                     firebaseAuth.currentUser!!.uid, "page$totalPage", pageBody
                 )
 
@@ -211,7 +210,7 @@ class FirebaseRepository @Inject constructor(
             emit(project)
         }
 
-    //Get project progress real-time
+    //Get project progress in real-time
     fun getProjectProgress(page: Int, itemNum: Int): LiveData<Int?> {
         val project = MutableLiveData<Int?>()
 
@@ -258,12 +257,12 @@ class FirebaseRepository @Inject constructor(
             var isSuccessful = false
 
             //Update totalItem
-            val totalItem = apiService.getTotalItem(
+            val totalItem = apiService.getProjectTotalItem(
                 firebaseAuth.currentUser!!.uid, "page${project.onPage}"
             ).body()
 
             val pageBody = Page(null, totalItem?.minus(1))
-            apiService.patchTotalItem(
+            apiService.patchProjectTotalItem(
                 firebaseAuth.currentUser!!.uid, "page${project.onPage}", pageBody
             )
 
@@ -311,4 +310,48 @@ class FirebaseRepository @Inject constructor(
 
             emit(isSuccessful)
         }
+
+    //Add task
+    fun addTask(task: Task, page: Int, itemNum: Int) =
+        liveData(Dispatchers.IO) {
+            //Add task
+            val isSuccessful = apiService.addTask(
+                firebaseAuth.currentUser!!.uid, "page$page", itemNum, task
+            ).isSuccessful
+
+            emit(isSuccessful)
+        }
+
+    //Get tasks list in real-time
+    fun getTasks(page: Int, itemNum: Int): LiveData<MutableList<Task>> {
+        val tasks = MutableLiveData<MutableList<Task>>()
+
+        dbReference.child(firebaseAuth.currentUser!!.uid)
+            .child("projects")
+            .child("page$page")
+            .child("data")
+            .child("$itemNum")
+            .child("tasks")
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val tempTasks = mutableListOf<Task>()
+
+                    snapshot.children.forEach {
+                        val task = it.getValue(Task::class.java)
+                        task!!.id = it.key
+
+                        tempTasks.add(task)
+                    }
+
+                    tasks.value = tempTasks
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+        return tasks
+    }
 }

@@ -7,7 +7,7 @@ import com.ajailani.projekan.data.model.Project
 import com.google.firebase.auth.FirebaseAuth
 import javax.inject.Inject
 
-class MyProjectsDatasource @Inject constructor(
+class MyProjectsDataSource @Inject constructor(
     private val apiService: ApiService,
     private val firebaseAuth: FirebaseAuth
 ) : PagingSource<Int, Project>() {

@@ -3,6 +3,7 @@ package com.ajailani.projekan.data.api
 import com.ajailani.projekan.data.model.Page
 import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.data.model.ProjectList
+import com.ajailani.projekan.data.model.Task
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -13,7 +14,7 @@ interface ApiService {
 
     //Get total item of the page
     @GET("{userId}/projects/{page}/totalItem.json")
-    suspend fun getTotalItem(
+    suspend fun getProjectTotalItem(
         @Path("userId") userId: String,
         @Path("page") page: String
     ): Response<Int?>
@@ -68,10 +69,10 @@ interface ApiService {
         @Body project: Project
     ): Response<Void>
 
-    //else if totalItem less than 5 then add project on the latest page
+    //else if totalItem less than 10 then add project on the latest page
     //Patch totalItem
     @PATCH("{userId}/projects/{page}.json")
-    suspend fun patchTotalItem(
+    suspend fun patchProjectTotalItem(
         @Path("userId") userId: String,
         @Path("page") page: String,
         @Body pageBody: Page
@@ -101,5 +102,16 @@ interface ApiService {
         @Path("userId") userId: String,
         @Path("page") page: String,
         @Body data: ProjectList
+    ): Response<Void>
+
+    /** Add Task */
+
+    //Add task
+    @POST("{userId}/projects/{page}/data/{itemNum}/tasks.json")
+    suspend fun addTask(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Path("itemNum") itemNum: Int,
+        @Body task: Task
     ): Response<Void>
 }

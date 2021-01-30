@@ -8,6 +8,8 @@ import kotlinx.parcelize.Parcelize
 data class Project(
     @Json(name = "id")
     var id: Int = 0,
+    @Json(name = "onPage")
+    var onPage: Int = 0,
     @Json(name = "itemNum")
     var itemNum: Int = 0,
     @Json(name = "icon")
@@ -25,9 +27,5 @@ data class Project(
     @Json(name = "progress")
     var progress: Int = 0,
     @Json(name = "status")
-    var status: String = "undone",
-    @Json(name = "onPage")
-    var onPage: Int = 0,
-    @Json(name = "tasks")
-    var tasks: List<Task>? = null
+    var status: String = "undone"
 ) : Parcelable

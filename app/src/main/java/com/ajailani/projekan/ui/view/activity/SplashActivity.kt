@@ -19,7 +19,7 @@ class SplashActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         //Check user authentication
-        splashViewModel.checkUserAuth()?.observe(this, { isUserAuth ->
+        splashViewModel.checkUserAuth().observe(this, { isUserAuth ->
             if(isUserAuth) {
                 val homeIntent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(homeIntent)

@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent">
@@ -11,7 +12,7 @@
         android:id="@+id/icon"
         android:layout_width="60dp"
         android:layout_height="60dp"
-        android:layout_marginTop="76dp"
+        android:layout_marginTop="20dp"
         android:layout_marginStart="20dp"
         android:background="@drawable/shimmer_placeholder_tv"
         android:scaleType="centerCrop"
@@ -24,7 +25,7 @@
         android:layout_width="100dp"
         android:layout_height="15dp"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="95dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/shimmer_placeholder_tv"
         android:fontFamily="@font/open_sans_semibold"
         android:textSize="18sp"
@@ -50,7 +51,7 @@
         android:layout_width="65dp"
         android:layout_height="20dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="55dp"
         android:background="@drawable/shimmer_placeholder_tv"
         android:orientation="vertical"
         android:paddingStart="10dp"
@@ -66,7 +67,7 @@
         android:layout_width="65dp"
         android:layout_height="20dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="55dp"
         android:layout_marginEnd="25dp"
         android:background="@drawable/shimmer_placeholder_tv"
         android:orientation="vertical"
@@ -99,9 +100,44 @@
         android:layout_marginStart="20dp"
         android:layout_marginTop="15dp"
         android:background="@drawable/shimmer_placeholder_tv"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/platformLayout"
         app:layout_constraintVertical_bias="0.0" />
+
+    <!-- Tasks -->
+    <include
+        android:id="@+id/include"
+        layout="@layout/shimmer_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="115dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appCompatTextView" />
+
+    <include
+        android:id="@+id/include2"
+        layout="@layout/shimmer_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include" />
+
+    <include
+        layout="@layout/shimmer_tasks"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/include2" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,9 +4,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajailani.projekan.R
 import com.ajailani.projekan.databinding.ActivityProjectDetailsBinding
+import com.ajailani.projekan.ui.adapter.TasksAdapter
+import com.ajailani.projekan.ui.view.fragment.AddTaskFragment
 import com.ajailani.projekan.ui.view.fragment.MoreFragment
+import com.ajailani.projekan.ui.viewmodel.AddTaskViewModel
 import com.ajailani.projekan.ui.viewmodel.MoreViewModel
 import com.ajailani.projekan.ui.viewmodel.ProjectDetailsViewModel
 import com.bumptech.glide.Glide
@@ -17,6 +21,8 @@ class ProjectDetailsActivity : AppCompatActivity() {
     lateinit var binding: ActivityProjectDetailsBinding
     private val projectDetailsViewModel: ProjectDetailsViewModel by viewModels()
     private val moreViewModel: MoreViewModel by viewModels()
+    private val addTaskViewModel: AddTaskViewModel by viewModels()
+    private lateinit var tasksAdapter: TasksAdapter
 
     private var page = 0
     private var itemNum = 0
@@ -53,6 +59,7 @@ class ProjectDetailsActivity : AppCompatActivity() {
             progressText.visibility = View.INVISIBLE
             deadlineTitleTv.visibility = View.INVISIBLE
             deadline.visibility = View.INVISIBLE
+            tasksRv.visibility = View.INVISIBLE
         }
     }
 
@@ -70,11 +77,13 @@ class ProjectDetailsActivity : AppCompatActivity() {
             progressText.visibility = View.VISIBLE
             deadlineTitleTv.visibility = View.VISIBLE
             deadline.visibility = View.VISIBLE
+            tasksRv.visibility = View.VISIBLE
         }
     }
 
     private fun setupView() {
-        projectDetailsViewModel.getProjectDetails(page, itemNum)?.observe(this, { project ->
+        //Show project details
+        projectDetailsViewModel.getProjectDetails(page, itemNum).observe(this, { project ->
             binding.apply {
                 if(project?.icon != "") {
                     Glide.with(icon.context)
@@ -89,13 +98,14 @@ class ProjectDetailsActivity : AppCompatActivity() {
                 deadline.text = project?.deadline
 
                 moreViewModel.setProject(project!!)
+                addTaskViewModel.setProject(project)
 
                 setupLoadedUI()
             }
         })
 
         //Observe project progress real-time
-        projectDetailsViewModel.getProjectProgress(page, itemNum)?.observe(this, { projectProgress ->
+        projectDetailsViewModel.getProjectProgress(page, itemNum).observe(this, { projectProgress ->
             if (projectProgress != null) {
                 binding.projectProgress.progress = projectProgress
                 binding.progressText.text = getString(R.string.progress_text, projectProgress)
@@ -106,10 +116,25 @@ class ProjectDetailsActivity : AppCompatActivity() {
         binding.moreIv.setOnClickListener {
             moreViewModel.setTag("Project")
 
-            MoreFragment().apply {
-                show(supportFragmentManager, MoreFragment.TAG)
-            }
+            MoreFragment().show(supportFragmentManager, MoreFragment.TAG)
         }
+
+        //Show AddTaskFragment
+        binding.addTask.setOnClickListener {
+            AddTaskFragment().show(supportFragmentManager, AddTaskFragment.TAG)
+        }
+
+        //Show tasks list
+        projectDetailsViewModel.getTasks(page, itemNum).observe(this, { tasks ->
+            tasksAdapter = TasksAdapter(tasks) { task ->
+
+            }
+
+            binding.tasksRv.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = tasksAdapter
+            }
+        })
     }
 
     override fun onDestroy() {

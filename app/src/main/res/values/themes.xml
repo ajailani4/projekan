@@ -37,10 +37,27 @@
         <item name="android:textColor">@color/colorGrey</item>
     </style>
 
-    <!-- Custom BottomSheetDialog -->
-    <style name="CustomBottomSheetDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+    <!-- Custom BottomSheetDialog for MoreFragment-->
+    <style name="CustomMoreDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
         <item name="android:windowIsFloating">false</item>
         <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <!-- Custom BottomSheetDialog for AddTaskFragment-->
+    <style name="AddTaskDialogBg" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_add_task</item>
+    </style>
+
+    <style name="CustomAddTaskDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="bottomSheetStyle">@style/AddTaskDialogBg</item>
+    </style>
+
+    <!-- Custom CheckBox -->
+    <style name="CustomCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/circle_check_box</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
 </resources>

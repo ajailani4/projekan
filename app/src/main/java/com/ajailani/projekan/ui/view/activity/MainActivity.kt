@@ -3,7 +3,6 @@ package com.ajailani.projekan.ui.view.activity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -61,12 +60,12 @@ class MainActivity : AppCompatActivity() {
 
     private fun setupView() {
         //Show user's name
-        homeViewModel.getUserName()?.observe(this, { userName ->
+        homeViewModel.getUserName().observe(this, { userName ->
             binding.helloUserTv.text = getString(R.string.hello_user, userName)
         })
 
         //Show user's ava
-        homeViewModel.getUserAva()?.observe(this, { userAva ->
+        homeViewModel.getUserAva().observe(this, { userAva ->
             Glide.with(this)
                 .load(userAva)
                 .into(binding.userAvaIv)
@@ -74,7 +73,7 @@ class MainActivity : AppCompatActivity() {
 
         //Show deadlined projects list for header
         lifecycleScope.launch {
-            homeViewModel.getDeadlinedProjectsHeader()?.observe(this@MainActivity, { deadlinedProjects ->
+            homeViewModel.getDeadlinedProjectsHeader().observe(this@MainActivity, { deadlinedProjects ->
                 if(deadlinedProjects.isNotEmpty()) {
                     binding.noDataIv.visibility = View.GONE
                     binding.noDataTv.visibility = View.GONE
@@ -106,7 +105,7 @@ class MainActivity : AppCompatActivity() {
 
         //Show my projects list
         lifecycleScope.launch {
-            homeViewModel.getMyProjects()?.observe(this@MainActivity, { myProjects ->
+            homeViewModel.getMyProjects().observe(this@MainActivity, { myProjects ->
                 myProjectsAdapter = MyProjectsAdapter { page, itemNum ->
                     //Go to ProjectDetailsActivity
                     val projectDetailsIntent = Intent(applicationContext, ProjectDetailsActivity::class.java)
@@ -140,5 +139,10 @@ class MainActivity : AppCompatActivity() {
             addProjectIntent.putExtra("tag", "Add")
             startActivity(addProjectIntent)
         }
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finishAffinity()
     }
 }
