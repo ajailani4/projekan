@@ -26,16 +26,18 @@ class MyProjectsAdapter(
 
     }
 
-    class ViewHolder(private val binding: ItemMyProjectBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemMyProjectBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(project: Project, listener: (Int, Int) -> Unit) {
             binding.apply {
-                if(project.icon != "") {
+                if (project.icon != "") {
                     Glide.with(icon.context)
                         .load(project.icon)
                         .into(icon)
                 }
 
-                if(project.status == "done") status.visibility = View.VISIBLE else status.visibility = View.INVISIBLE
+                if (project.status == "done") status.visibility =
+                    View.VISIBLE else status.visibility = View.INVISIBLE
 
                 title.text = project.title
                 platform.text = project.platform

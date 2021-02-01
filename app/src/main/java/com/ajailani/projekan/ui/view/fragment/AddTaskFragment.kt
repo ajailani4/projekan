@@ -50,7 +50,7 @@ class AddTaskFragment : BottomSheetDialogFragment() {
             val task = Task()
             task.title = binding.inputTitle.text.toString()
 
-            if(task.title.isNotEmpty()) {
+            if (task.title.isNotEmpty()) {
                 this.isCancelable = false
                 binding.doneBtn.isEnabled = false
                 binding.progressBar.visibility = View.VISIBLE
@@ -62,9 +62,10 @@ class AddTaskFragment : BottomSheetDialogFragment() {
 
     private fun addTask(task: Task, page: Int, itemNum: Int) {
         addTaskViewModel.addTask(task, page, itemNum).observe(this, { isTaskAdded ->
-            if(isTaskAdded) {
+            if (isTaskAdded) {
                 Toast.makeText(context, "Successfully added", Toast.LENGTH_SHORT).show()
 
+                addTaskViewModel.setAddTask(true)
                 this.dismiss()
             } else {
                 Toast.makeText(context, "Unsuccessfully added", Toast.LENGTH_SHORT).show()

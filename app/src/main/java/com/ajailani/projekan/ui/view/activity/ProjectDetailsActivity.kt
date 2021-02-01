@@ -1,9 +1,11 @@
 package com.ajailani.projekan.ui.view.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajailani.projekan.R
 import com.ajailani.projekan.databinding.ActivityProjectDetailsBinding
@@ -15,6 +17,7 @@ import com.ajailani.projekan.ui.viewmodel.MoreViewModel
 import com.ajailani.projekan.ui.viewmodel.ProjectDetailsViewModel
 import com.bumptech.glide.Glide
 import dagger.hilt.android.AndroidEntryPoint
+import java.util.*
 
 @AndroidEntryPoint
 class ProjectDetailsActivity : AppCompatActivity() {
@@ -85,7 +88,7 @@ class ProjectDetailsActivity : AppCompatActivity() {
         //Show project details
         projectDetailsViewModel.getProjectDetails(page, itemNum).observe(this, { project ->
             binding.apply {
-                if(project?.icon != "") {
+                if (project?.icon != "") {
                     Glide.with(icon.context)
                         .load(project?.icon)
                         .into(icon)
@@ -100,7 +103,43 @@ class ProjectDetailsActivity : AppCompatActivity() {
                 moreViewModel.setProject(project!!)
                 addTaskViewModel.setProject(project)
 
-                setupLoadedUI()
+                //Show tasks list
+                projectDetailsViewModel.getTasks(page, itemNum).observe(this@ProjectDetailsActivity, { tasks ->
+                    if(tasks.isNotEmpty()) {
+                        binding.addSomeTasksIv.visibility = View.GONE
+                        binding.addSomeTasksTv.visibility = View.GONE
+
+                        tasksAdapter = TasksAdapter(tasks, { id, status ->
+                            binding.progressBar.root.visibility = View.VISIBLE
+
+                            projectDetailsViewModel.updateTaskProgress(page, itemNum, id, status).observe(this@ProjectDetailsActivity, { isTaskStatusUpdated ->
+                                if (isTaskStatusUpdated) {
+                                    projectDetailsViewModel.updateProjectProgress(page, itemNum).observe(this@ProjectDetailsActivity, { isProjectProgUpdated ->
+                                        if(isProjectProgUpdated) {
+                                            Toast.makeText(applicationContext, "Progress has been updated", Toast.LENGTH_SHORT).show()
+                                        } else {
+                                            Toast.makeText(applicationContext, "Progress can't be updated", Toast.LENGTH_SHORT).show()
+                                        }
+
+                                        binding.progressBar.root.visibility = View.GONE
+                                    })
+                                }
+                            })
+                        }, { task ->
+
+                        })
+
+                        binding.tasksRv.apply {
+                            layoutManager = LinearLayoutManager(context)
+                            adapter = tasksAdapter
+                        }
+                    } else {
+                        addSomeTasksIv.visibility = View.VISIBLE
+                        addSomeTasksTv.visibility = View.VISIBLE
+                    }
+
+                    setupLoadedUI()
+                })
             }
         })
 
@@ -124,15 +163,10 @@ class ProjectDetailsActivity : AppCompatActivity() {
             AddTaskFragment().show(supportFragmentManager, AddTaskFragment.TAG)
         }
 
-        //Show tasks list
-        projectDetailsViewModel.getTasks(page, itemNum).observe(this, { tasks ->
-            tasksAdapter = TasksAdapter(tasks) { task ->
-
-            }
-
-            binding.tasksRv.apply {
-                layoutManager = LinearLayoutManager(context)
-                adapter = tasksAdapter
+        //Observe isTaskAdded
+        addTaskViewModel.isTaskAdded.observe(this, { isTaskAdded ->
+            if (isTaskAdded) {
+                projectDetailsViewModel.updateProjectProgress(page, itemNum)
             }
         })
     }

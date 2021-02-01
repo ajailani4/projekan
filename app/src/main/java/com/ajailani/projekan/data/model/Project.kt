@@ -27,5 +27,7 @@ data class Project(
     @Json(name = "progress")
     var progress: Int = 0,
     @Json(name = "status")
-    var status: String = "undone"
+    var status: String = "undone",
+    @Json(name = "hasTasks")
+    var hasTasks: Boolean = false
 ) : Parcelable

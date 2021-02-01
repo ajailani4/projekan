@@ -1,10 +1,10 @@
 package com.ajailani.projekan.ui.view.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.ajailani.projekan.databinding.ActivityLoginBinding
 import com.ajailani.projekan.ui.viewmodel.LoginViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -31,8 +31,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == RC_SIGN_IN) {
-            if(resultCode == RESULT_OK) {
+        if (requestCode == RC_SIGN_IN) {
+            if (resultCode == RESULT_OK) {
                 val homeIntent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(homeIntent)
                 finish()

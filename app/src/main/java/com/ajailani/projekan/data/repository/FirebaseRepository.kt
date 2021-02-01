@@ -48,7 +48,11 @@ class FirebaseRepository @Inject constructor(
         val loginIntent = MutableLiveData<Intent>()
         loginIntent.value = AuthUI.getInstance()
             .createSignInIntentBuilder()
-            .setAvailableProviders(Collections.singletonList(AuthUI.IdpConfig.GoogleBuilder().build()))
+            .setAvailableProviders(
+                Collections.singletonList(
+                    AuthUI.IdpConfig.GoogleBuilder().build()
+                )
+            )
             .setIsSmartLockEnabled(false)
             .build()
 
@@ -93,7 +97,8 @@ class FirebaseRepository @Inject constructor(
                 val deadline = sdf.parse(projectsList[i].deadline)
                 val curDate = Date()
 
-                val dayDiff = TimeUnit.DAYS.convert((deadline!!.time - curDate.time), TimeUnit.MILLISECONDS)
+                val dayDiff =
+                    TimeUnit.DAYS.convert((deadline!!.time - curDate.time), TimeUnit.MILLISECONDS)
 
                 if (dayDiff in 0..7) {
                     deadlinedProjectsList.add(projectsList[i])
@@ -129,40 +134,40 @@ class FirebaseRepository @Inject constructor(
             ).body() ?: 0
 
             val projectId = apiService.getProjectId(
-                firebaseAuth.currentUser!!.uid, "page$totalPage", totalItem-1
+                firebaseAuth.currentUser!!.uid, "page$totalPage", totalItem - 1
             ).body() ?: 0
 
             //Update project id and icon
-            project.id = projectId+1
+            project.id = projectId + 1
             project.icon = iconUrl
 
-            if(totalItem == 0 || totalItem == 10) {
+            if (totalItem == 0 || totalItem == 10) {
                 /**Add project on the new page*/
 
                 //Update totalPage
                 val totalPageBody = HashMap<String, Int>()
-                totalPageBody["totalPage"] = totalPage+1
+                totalPageBody["totalPage"] = totalPage + 1
                 apiService.updateTotalPage(
                     firebaseAuth.currentUser!!.uid, totalPageBody
                 )
 
                 //Put page and totalItem
-                val pageBody = Page(totalPage+1, 1)
+                val pageBody = Page(totalPage + 1, 1)
                 apiService.putPageAndTotalItem(
-                    firebaseAuth.currentUser!!.uid, "page${totalPage+1}", pageBody
+                    firebaseAuth.currentUser!!.uid, "page${totalPage + 1}", pageBody
                 )
 
                 //Put new project
                 project.itemNum = 0
-                project.onPage = totalPage+1
+                project.onPage = totalPage + 1
                 isSuccessful = apiService.putProject(
-                    firebaseAuth.currentUser!!.uid, "page${totalPage+1}", 0, project
+                    firebaseAuth.currentUser!!.uid, "page${totalPage + 1}", 0, project
                 ).isSuccessful
             } else {
                 /**Add project on the latest page*/
 
                 //Patch totalItem
-                val pageBody = Page(null, totalItem+1)
+                val pageBody = Page(null, totalItem + 1)
                 apiService.patchProjectTotalItem(
                     firebaseAuth.currentUser!!.uid, "page$totalPage", pageBody
                 )
@@ -180,7 +185,7 @@ class FirebaseRepository @Inject constructor(
 
     //Upload project icon
     fun uploadProjectIcon(bytes: ByteArray): LiveData<String> {
-        val uploadProjectIcon =  MutableLiveData<String>()
+        val uploadProjectIcon = MutableLiveData<String>()
 
         //Write path name where the image will be stored
         val fileName = "${UUID.randomUUID()}.jpg"
@@ -188,7 +193,7 @@ class FirebaseRepository @Inject constructor(
 
         firebaseStorage.reference.child(pathName).putBytes(bytes)
             .addOnCompleteListener { task ->
-                if(task.isSuccessful) {
+                if (task.isSuccessful) {
                     firebaseStorage.reference.child(pathName).downloadUrl.addOnSuccessListener { uri ->
                         val iconUrl = uri.toString()
 
@@ -239,7 +244,7 @@ class FirebaseRepository @Inject constructor(
     fun updateProject(project: Project, iconUrl: String) =
         liveData(Dispatchers.IO) {
             //Update project icon if iconUrl changed
-            if(iconUrl != "") {
+            if (iconUrl != "") {
                 project.icon = iconUrl
             }
 
@@ -269,29 +274,61 @@ class FirebaseRepository @Inject constructor(
             //Update page
             val totalPage = apiService.getTotalPage(firebaseAuth.currentUser!!.uid).body()
 
-            if(totalItem == 1) {
+            if (totalItem == 1) {
                 apiService.deletePage(
                     firebaseAuth.currentUser!!.uid, "page${project.onPage}"
                 )
 
                 val totalPageBody = HashMap<String, Int>()
                 totalPageBody["totalPage"] = totalPage!!.minus(1)
-                apiService.updateTotalPage(
+                isSuccessful = apiService.updateTotalPage(
                     firebaseAuth.currentUser!!.uid, totalPageBody
-                )
+                ).isSuccessful
             }
 
             //Restructure project list and patch it
-            if(totalItem!! > 1) {
+            if (totalItem!! > 1) {
+                //Get tasks list in each item
+                val tasksListEachItem = mutableListOf<List<Task>>()
+
+                for (i in 0 until totalItem) {
+                    if (i != project.itemNum) {
+                        dbReference.child(firebaseAuth.currentUser!!.uid)
+                            .child("projects")
+                            .child("page${project.onPage}")
+                            .child("data")
+                            .child("$i")
+                            .child("tasks")
+                            .addValueEventListener(object : ValueEventListener {
+                                override fun onDataChange(snapshot: DataSnapshot) {
+                                    val tempTasksList = mutableListOf<Task>()
+
+                                    snapshot.children.forEach {
+                                        val task = it.getValue(Task::class.java)
+
+                                        tempTasksList.add(task!!)
+                                    }
+
+                                    tasksListEachItem.add(tempTasksList)
+                                }
+
+                                override fun onCancelled(error: DatabaseError) {
+                                    TODO("Not yet implemented")
+                                }
+
+                            })
+                    }
+                }
+
                 val projectList = apiService.getMyProjects(
                     firebaseAuth.currentUser!!.uid, "page${project.onPage}"
                 ).body() ?: emptyList()
 
                 val tempReProjectList = mutableListOf<Project>()
 
-                for(i in projectList) {
-                    if(i.id != project.id) {
-                        if(i.itemNum > project.itemNum) {
+                for (i in projectList) {
+                    if (i.id != project.id) {
+                        if (i.itemNum > project.itemNum) {
                             i.itemNum -= 1
                         }
 
@@ -303,9 +340,26 @@ class FirebaseRepository @Inject constructor(
 
                 val reProjectList = ProjectList(tempReProjectList)
 
-                isSuccessful = apiService.patchReProjectList(
+                isSuccessful = apiService.updateReProjectList(
                     firebaseAuth.currentUser!!.uid, "page${project.onPage}", reProjectList
                 ).isSuccessful
+
+                //Repost tasks list in each item
+                if(tasksListEachItem.isNotEmpty()) {
+                    val updatedProjectList = apiService.getMyProjects(
+                        firebaseAuth.currentUser!!.uid, "page${project.onPage}"
+                    ).body() ?: emptyList()
+
+                    for ((itemNum, i) in updatedProjectList.withIndex()) {
+                        if (i.hasTasks) {
+                            for (j in tasksListEachItem[itemNum].indices) {
+                                isSuccessful = apiService.addTask(
+                                    firebaseAuth.currentUser!!.uid, "page${project.onPage}", itemNum, tasksListEachItem[itemNum][j]
+                                ).isSuccessful
+                            }
+                        }
+                    }
+                }
             }
 
             emit(isSuccessful)
@@ -314,6 +368,13 @@ class FirebaseRepository @Inject constructor(
     //Add task
     fun addTask(task: Task, page: Int, itemNum: Int) =
         liveData(Dispatchers.IO) {
+            //Set project has tasks
+            val hasTasksBody = HashMap<String, Boolean>()
+            hasTasksBody["hasTasks"] = true
+            apiService.setProjectHasTasks(
+                firebaseAuth.currentUser!!.uid, "page$page", itemNum, hasTasksBody
+            )
+
             //Add task
             val isSuccessful = apiService.addTask(
                 firebaseAuth.currentUser!!.uid, "page$page", itemNum, task
@@ -334,16 +395,16 @@ class FirebaseRepository @Inject constructor(
             .child("tasks")
             .addValueEventListener(object : ValueEventListener {
                 override fun onDataChange(snapshot: DataSnapshot) {
-                    val tempTasks = mutableListOf<Task>()
+                    val tempTasksList = mutableListOf<Task>()
 
                     snapshot.children.forEach {
                         val task = it.getValue(Task::class.java)
                         task!!.id = it.key
 
-                        tempTasks.add(task)
+                        tempTasksList.add(task)
                     }
 
-                    tasks.value = tempTasks
+                    tasks.value = tempTasksList
                 }
 
                 override fun onCancelled(error: DatabaseError) {
@@ -353,5 +414,69 @@ class FirebaseRepository @Inject constructor(
             })
 
         return tasks
+    }
+
+    //Update task status
+    fun updateTaskProgress(page: Int, itemNum: Int, itemId: String, status: String) =
+        liveData(Dispatchers.IO) {
+            val statusBody = HashMap<String, String>()
+            statusBody["status"] = status
+
+            val isSuccessful = apiService.updateTaskStatus(
+                firebaseAuth.currentUser!!.uid, "page$page", itemNum, itemId, statusBody
+            ).isSuccessful
+
+            emit(isSuccessful)
+        }
+
+    //Update project progress
+    fun updateProjectProgress(page: Int, itemNum: Int): LiveData<Boolean> {
+        val updatedProjectProg = MutableLiveData<Boolean>()
+        val doneTasksList = mutableListOf<Task>()
+
+        /** Count project progress */
+        dbReference.child(firebaseAuth.currentUser!!.uid)
+            .child("projects")
+            .child("page$page")
+            .child("data")
+            .child("$itemNum")
+            .child("tasks")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    snapshot.children.forEach {
+                        val task = it.getValue(Task::class.java)
+
+                        if (task?.status == "done") doneTasksList.add(task)
+                    }
+
+                    val doneTasksTotal = doneTasksList.size.toFloat()
+                    val tasksTotal = snapshot.childrenCount.toFloat()
+                    val projectProgress = (doneTasksTotal/tasksTotal) * 100
+
+                    /** Update project progress */
+                    val projectProgressBody = HashMap<String, Any>()
+                    projectProgressBody["progress"] = projectProgress.toInt()
+
+                    dbReference.child(firebaseAuth.currentUser!!.uid)
+                        .child("projects")
+                        .child("page$page")
+                        .child("data")
+                        .child("$itemNum")
+                        .updateChildren(projectProgressBody)
+                        .addOnSuccessListener {
+                            updatedProjectProg.value = true
+                        }
+                        .addOnFailureListener {
+                            updatedProjectProg.value = false
+                        }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            })
+
+        return updatedProjectProg
     }
 }

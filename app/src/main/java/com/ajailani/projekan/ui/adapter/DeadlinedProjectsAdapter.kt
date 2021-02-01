@@ -14,16 +14,18 @@ class DeadlinedProjectsAdapter(
 ) : RecyclerView.Adapter<DeadlinedProjectsAdapter.ViewHolder>() {
     private lateinit var binding: ItemDeadlinedProjectBinding
 
-    class ViewHolder(private val binding: ItemDeadlinedProjectBinding) : RecyclerView.ViewHolder(binding.root) {
+    class ViewHolder(private val binding: ItemDeadlinedProjectBinding) :
+        RecyclerView.ViewHolder(binding.root) {
         fun bind(project: Project, listener: (Int, Int) -> Unit) {
             binding.apply {
-                if(project.icon != "") {
+                if (project.icon != "") {
                     Glide.with(icon.context)
-                            .load(project.icon)
-                            .into(icon)
+                        .load(project.icon)
+                        .into(icon)
                 }
 
-                if(project.status == "done") status.visibility = View.VISIBLE else status.visibility = View.INVISIBLE
+                if (project.status == "done") status.visibility =
+                    View.VISIBLE else status.visibility = View.INVISIBLE
 
                 title.text = project.title
                 desc.text = project.desc
@@ -40,7 +42,7 @@ class DeadlinedProjectsAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         binding = ItemDeadlinedProjectBinding.inflate(
-                LayoutInflater.from(parent.context), parent, false
+            LayoutInflater.from(parent.context), parent, false
         )
 
         return ViewHolder(binding)

@@ -1,9 +1,9 @@
 package com.ajailani.projekan.ui.view.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import com.ajailani.projekan.databinding.ActivitySplashBinding
 import com.ajailani.projekan.ui.viewmodel.SplashViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,7 +20,7 @@ class SplashActivity : AppCompatActivity() {
 
         //Check user authentication
         splashViewModel.checkUserAuth().observe(this, { isUserAuth ->
-            if(isUserAuth) {
+            if (isUserAuth) {
                 val homeIntent = Intent(applicationContext, MainActivity::class.java)
                 startActivity(homeIntent)
                 finish()

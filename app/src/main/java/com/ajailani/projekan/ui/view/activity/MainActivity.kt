@@ -1,10 +1,10 @@
 package com.ajailani.projekan.ui.view.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -73,34 +73,37 @@ class MainActivity : AppCompatActivity() {
 
         //Show deadlined projects list for header
         lifecycleScope.launch {
-            homeViewModel.getDeadlinedProjectsHeader().observe(this@MainActivity, { deadlinedProjects ->
-                if(deadlinedProjects.isNotEmpty()) {
-                    binding.noDataIv.visibility = View.GONE
-                    binding.noDataTv.visibility = View.GONE
-                    binding.seeMoreTv.visibility = View.VISIBLE
+            homeViewModel.getDeadlinedProjectsHeader()
+                .observe(this@MainActivity, { deadlinedProjects ->
+                    if (deadlinedProjects.isNotEmpty()) {
+                        binding.noDataIv.visibility = View.GONE
+                        binding.noDataTv.visibility = View.GONE
+                        binding.seeMoreTv.visibility = View.VISIBLE
 
-                    deadlinedProjectsAdapter = DeadlinedProjectsAdapter(deadlinedProjects) { page, itemNum ->
-                        //Go to ProjectDetailsActivity
-                        val projectDetailsIntent = Intent(applicationContext, ProjectDetailsActivity::class.java)
-                        projectDetailsIntent.putExtra("page", page)
-                        projectDetailsIntent.putExtra("itemNum", itemNum)
-                        startActivity(projectDetailsIntent)
+                        deadlinedProjectsAdapter =
+                            DeadlinedProjectsAdapter(deadlinedProjects) { page, itemNum ->
+                                //Go to ProjectDetailsActivity
+                                val projectDetailsIntent =
+                                    Intent(applicationContext, ProjectDetailsActivity::class.java)
+                                projectDetailsIntent.putExtra("page", page)
+                                projectDetailsIntent.putExtra("itemNum", itemNum)
+                                startActivity(projectDetailsIntent)
+                            }
+
+                        binding.deadlinedProjectsRv.apply {
+                            layoutManager = LinearLayoutManager(
+                                context, LinearLayoutManager.HORIZONTAL, false
+                            )
+                            adapter = deadlinedProjectsAdapter
+                        }
+                    } else {
+                        binding.noDataIv.visibility = View.VISIBLE
+                        binding.noDataTv.visibility = View.VISIBLE
+                        binding.seeMoreTv.visibility = View.INVISIBLE
                     }
 
-                    binding.deadlinedProjectsRv.apply {
-                        layoutManager = LinearLayoutManager(
-                            context, LinearLayoutManager.HORIZONTAL, false
-                        )
-                        adapter = deadlinedProjectsAdapter
-                    }
-                } else {
-                    binding.noDataIv.visibility = View.VISIBLE
-                    binding.noDataTv.visibility = View.VISIBLE
-                    binding.seeMoreTv.visibility = View.INVISIBLE
-                }
-
-                setupLoadedUI()
-            })
+                    setupLoadedUI()
+                })
         }
 
         //Show my projects list
@@ -108,7 +111,8 @@ class MainActivity : AppCompatActivity() {
             homeViewModel.getMyProjects().observe(this@MainActivity, { myProjects ->
                 myProjectsAdapter = MyProjectsAdapter { page, itemNum ->
                     //Go to ProjectDetailsActivity
-                    val projectDetailsIntent = Intent(applicationContext, ProjectDetailsActivity::class.java)
+                    val projectDetailsIntent =
+                        Intent(applicationContext, ProjectDetailsActivity::class.java)
                     projectDetailsIntent.putExtra("page", page)
                     projectDetailsIntent.putExtra("itemNum", itemNum)
                     startActivity(projectDetailsIntent)
@@ -122,7 +126,7 @@ class MainActivity : AppCompatActivity() {
                 myProjectsAdapter.submitData(this@MainActivity.lifecycle, myProjects)
 
                 myProjectsAdapter.addLoadStateListener { loadState ->
-                    if(loadState.source.refresh is LoadState.NotLoading && myProjectsAdapter.itemCount < 1) {
+                    if (loadState.source.refresh is LoadState.NotLoading && myProjectsAdapter.itemCount < 1) {
                         binding.addYourProjectsIv.visibility = View.VISIBLE
                         binding.addYourProjectsTv.visibility = View.VISIBLE
                     } else {

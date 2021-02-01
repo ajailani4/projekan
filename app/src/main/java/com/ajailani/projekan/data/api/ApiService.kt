@@ -50,7 +50,7 @@ interface ApiService {
     suspend fun updateTotalPage(
         @Path("userId") userId: String,
         @Body totalPage: Map<String, Int>
-    )
+    ): Response<Void>
 
     //Put page and totalItem
     @PUT("{userId}/projects/{page}.json")
@@ -96,15 +96,24 @@ interface ApiService {
         @Path("page") page: String
     ): Response<Void>
 
-    //Patch new restructured project list
+    //Update new restructured project list
     @PATCH("{userId}/projects/{page}.json")
-    suspend fun patchReProjectList(
+    suspend fun updateReProjectList(
         @Path("userId") userId: String,
         @Path("page") page: String,
         @Body data: ProjectList
     ): Response<Void>
 
     /** Add Task */
+
+    //Set project has tasks
+    @PATCH("{userId}/projects/{page}/data/{itemNum}.json")
+    suspend fun setProjectHasTasks(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Path("itemNum") itemNum: Int,
+        @Body hasTasks: Map<String, Boolean>
+    ): Response<Void>
 
     //Add task
     @POST("{userId}/projects/{page}/data/{itemNum}/tasks.json")
@@ -113,5 +122,15 @@ interface ApiService {
         @Path("page") page: String,
         @Path("itemNum") itemNum: Int,
         @Body task: Task
+    ): Response<Void>
+
+    //Update task status
+    @PATCH("{userId}/projects/{page}/data/{itemNum}/tasks/{taskId}.json")
+    suspend fun updateTaskStatus(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Path("itemNum") itemNum: Int,
+        @Path("taskId") taskId: String,
+        @Body status: Map<String, String>
     ): Response<Void>
 }

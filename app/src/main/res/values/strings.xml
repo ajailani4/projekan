@@ -29,4 +29,5 @@
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="add_task">Add Task</string>
+    <string name="add_some_tasks">Let\'s add some tasks</string>
 </resources>

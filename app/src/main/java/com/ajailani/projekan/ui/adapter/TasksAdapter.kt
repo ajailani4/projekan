@@ -8,21 +8,29 @@ import com.ajailani.projekan.databinding.ItemTaskBinding
 
 class TasksAdapter(
     private val tasksList: List<Task>,
-    private val listener: (Task) -> Unit
-): RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
+    private val statusListener: (String, String) -> Unit,
+    private val moreListener: (Task) -> Unit
+) : RecyclerView.Adapter<TasksAdapter.ViewHolder>() {
     private lateinit var binding: ItemTaskBinding
 
     class ViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(task: Task, listener: (Task) -> Unit) {
+        fun bind(task: Task, statusListener: (String, String) -> Unit, moreListener: (Task) -> Unit) {
             binding.apply {
                 title.text = task.title
 
-                if(task.status == "done") {
-                    status.isChecked = true
+                if (task.status == "done") status.isChecked = true
+
+                //Handle status CheckBox event
+                status.setOnClickListener {
+                    if (status.isChecked) {
+                        task.id?.let { id -> statusListener(id, "done") }
+                    } else {
+                        task.id?.let { id -> statusListener(id, "undone") }
+                    }
                 }
 
                 moreIv.setOnClickListener {
-                    listener(task)
+                    moreListener(task)
                 }
             }
         }
@@ -37,7 +45,7 @@ class TasksAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(tasksList[position], listener)
+        holder.bind(tasksList[position], statusListener, moreListener)
     }
 
     override fun getItemCount() = tasksList.size

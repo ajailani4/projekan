@@ -1,7 +1,6 @@
 package com.ajailani.projekan.di.module
 
 import com.ajailani.projekan.data.api.ApiService
-import com.ajailani.projekan.data.repository.FirebaseRepository
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase

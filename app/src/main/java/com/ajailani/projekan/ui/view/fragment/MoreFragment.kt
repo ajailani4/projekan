@@ -13,6 +13,7 @@ import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.databinding.FragmentMoreBinding
 import com.ajailani.projekan.ui.view.activity.AddProjectActivity
 import com.ajailani.projekan.ui.view.activity.MainActivity
+import com.ajailani.projekan.ui.view.activity.ProjectDetailsActivity
 import com.ajailani.projekan.ui.viewmodel.MoreViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -59,9 +60,9 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
     }
 
     override fun onClick(v: View?) {
-        when(v) {
+        when (v) {
             binding.edit -> {
-                if(tagMore == "Project") {
+                if (tagMore == "Project") {
                     val addProjectIntent = Intent(context, AddProjectActivity::class.java)
                     addProjectIntent.putExtra("tag", "Edit")
                     addProjectIntent.putExtra("project", projectMore)
@@ -84,23 +85,29 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                 binding.edit.isEnabled = false
                 binding.delete.isEnabled = false
 
-                if(tagMore == "Project") {
-                    moreViewModel.deleteProject(projectMore).observe(viewLifecycleOwner, { isProjectDeleted ->
-                        if(isProjectDeleted) {
-                            Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show()
+                if (tagMore == "Project") {
+                    moreViewModel.setDeleteProject(true)
+                    moreViewModel.deleteProject(projectMore)
+                        .observe(viewLifecycleOwner, { isProjectDeleted ->
+                            if (isProjectDeleted) {
+                                Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show()
 
-                            val homeIntent = Intent(context, MainActivity::class.java)
-                            startActivity(homeIntent)
-                            activity?.finish()
-                        } else {
-                            Toast.makeText(context, "Unsuccessfully deleted", Toast.LENGTH_SHORT).show()
+                                val homeIntent = Intent(context, MainActivity::class.java)
+                                startActivity(homeIntent)
+                                activity?.finish()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Unsuccessfully deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                            this.isCancelable = true
-                            binding.progressBar.visibility = View.GONE
-                            binding.edit.isEnabled = true
-                            binding.delete.isEnabled = true
-                        }
-                    })
+                                this.isCancelable = true
+                                binding.progressBar.visibility = View.GONE
+                                binding.edit.isEnabled = true
+                                binding.delete.isEnabled = true
+                            }
+                        })
                 }
             }
             .setNegativeButton(R.string.no) { dialog, _ ->
