@@ -8,7 +8,8 @@ import com.ajailani.projekan.data.repository.FirebaseRepository
 class AddProjectViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository
 ) : ViewModel() {
-    fun uploadProjectIcon(bytes: ByteArray) = firebaseRepository.uploadProjectIcon(bytes)
+    fun uploadProjectIcon(bytes: ByteArray) =
+        firebaseRepository.uploadProjectIcon(bytes)
 
     fun addProject(project: Project, iconUrl: String) =
         firebaseRepository.addProject(project, iconUrl)

@@ -101,65 +101,75 @@ class ProjectDetailsActivity : AppCompatActivity() {
                 platform.text = project.platform
                 category.text = project.category
                 deadline.text = project.deadline
+            }
 
-                //Pass project in order to MoreFragment or AddTaskFragment knows what project will be executed
-                moreViewModel.setProject(project)
-                addTaskViewModel.setProject(project)
+            //Pass project in order to MoreFragment or AddTaskFragment knows what project will be executed
+            moreViewModel.setProject(project)
+            addTaskViewModel.setProject(project)
 
-                //Show tasks list
-                projectDetailsViewModel.getTasks(page, itemNum).observe(this@ProjectDetailsActivity, { tasks ->
-                    if(tasks.isNotEmpty()) {
+            //Show tasks list
+            projectDetailsViewModel.getTasks(page, itemNum).observe(this@ProjectDetailsActivity, { tasks ->
+                if(tasks.isNotEmpty()) {
+                    binding.apply {
                         tasksRv.visibility = View.VISIBLE
-                        binding.addSomeTasksIv.visibility = View.GONE
-                        binding.addSomeTasksTv.visibility = View.GONE
+                        addSomeTasksIv.visibility = View.GONE
+                        addSomeTasksTv.visibility = View.GONE
+                    }
 
-                        tasksAdapter = TasksAdapter(tasks, { id, status ->
-                            binding.apply {
-                                moreIv.isEnabled = false
-                                addTask.isEnabled = false
-                                progressBar.root.visibility = View.VISIBLE
-                            }
+                    tasksAdapter = TasksAdapter(tasks, { id, status ->
+                        binding.apply {
+                            moreIv.isEnabled = false
+                            addTask.isEnabled = false
+                            progressBar.root.visibility = View.VISIBLE
+                        }
 
-                            projectDetailsViewModel.updateTaskProgress(page, itemNum, id, status).observe(this@ProjectDetailsActivity, { isTaskStatusUpdated ->
+                        projectDetailsViewModel.updateTaskProgress(page, itemNum, id, status)
+                            .observe(this@ProjectDetailsActivity, { isTaskStatusUpdated ->
                                 if (isTaskStatusUpdated) {
-                                    projectDetailsViewModel.updateProjectProgress(page, itemNum).observe(this@ProjectDetailsActivity, { isProjectProgUpdated ->
-                                        Log.d("Projekan progress", "updating")
-                                        if(isProjectProgUpdated) {
-                                            Log.d("Projekan progress", "updated")
-                                            Toast.makeText(applicationContext, "Progress has been updated", Toast.LENGTH_SHORT).show()
-                                        } else {
-                                            Toast.makeText(applicationContext, "Progress can't be updated", Toast.LENGTH_SHORT).show()
-                                        }
+                                    projectDetailsViewModel.updateProjectProgress(page, itemNum)
+                                        .observe(this@ProjectDetailsActivity, { isProjectProgUpdated ->
+                                            Log.d("Projekan progress", "updating")
+                                            if(isProjectProgUpdated) {
+                                                Log.d("Projekan progress", "updated")
+                                                Toast
+                                                    .makeText(applicationContext, "Progress has been updated", Toast.LENGTH_SHORT)
+                                                    .show()
+                                            } else {
+                                                Toast
+                                                    .makeText(applicationContext, "Progress can't be updated", Toast.LENGTH_SHORT)
+                                                    .show()
+                                            }
 
-                                        binding.apply {
-                                            moreIv.isEnabled = true
-                                            addTask.isEnabled = true
-                                            progressBar.root.visibility = View.GONE
-                                        }
-                                    })
+                                            binding.apply {
+                                                moreIv.isEnabled = true
+                                                addTask.isEnabled = true
+                                                progressBar.root.visibility = View.GONE
+                                            }
+                                        })
                                 }
                             })
-                        }, { task ->
-                            //Pass the task in order to MoreFragment knows what task will be executed
-                            moreViewModel.setTag("Task")
-                            moreViewModel.setTask(task)
+                    }, { task ->
+                        //Pass the task in order to MoreFragment knows what task will be executed
+                        moreViewModel.setTag("Task")
+                        moreViewModel.setTask(task)
 
-                            MoreFragment().show(supportFragmentManager, MoreFragment.TAG)
-                        })
+                        MoreFragment().show(supportFragmentManager, MoreFragment.TAG)
+                    })
 
-                        binding.tasksRv.apply {
-                            layoutManager = LinearLayoutManager(context)
-                            adapter = tasksAdapter
-                        }
-                    } else {
+                    binding.tasksRv.apply {
+                        layoutManager = LinearLayoutManager(context)
+                        adapter = tasksAdapter
+                    }
+                } else {
+                    binding.apply {
                         tasksRv.visibility = View.INVISIBLE
                         addSomeTasksIv.visibility = View.VISIBLE
                         addSomeTasksTv.visibility = View.VISIBLE
                     }
+                }
 
-                    setupLoadedUI()
-                })
-            }
+                setupLoadedUI()
+            })
         })
 
         //Observe project progress real-time
@@ -170,7 +180,7 @@ class ProjectDetailsActivity : AppCompatActivity() {
                 binding.projectProgress.progress = projectProgress
                 binding.progressText.text = getString(R.string.progress_text, projectProgress)
 
-                //Update project progress in order to MoreFragment has updated project progress too
+                //Update project progress in order to MoreFragment also has updated project progress
                 project.progress = projectProgress
                 moreViewModel.setProject(project)
 
@@ -197,9 +207,16 @@ class ProjectDetailsActivity : AppCompatActivity() {
             AddTaskFragment().show(supportFragmentManager, AddTaskFragment.TAG)
         }
 
-        //Observe isTaskAdded
+        //Observe isTaskAdded in order to project progress is updated in real-time
         addTaskViewModel.isTaskAdded.observe(this, { isTaskAdded ->
             if (isTaskAdded) {
+                projectDetailsViewModel.updateProjectProgress(page, itemNum)
+            }
+        })
+
+        //Observe isTaskDeleted in order to project progress is updated in real-time
+        moreViewModel.isTaskDeleted.observe(this, { isTaskDeleted ->
+            if (isTaskDeleted) {
                 projectDetailsViewModel.updateProjectProgress(page, itemNum)
             }
         })

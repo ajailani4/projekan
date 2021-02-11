@@ -9,11 +9,6 @@ import com.ajailani.projekan.data.repository.FirebaseRepository
 class LoginViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository
 ) : ViewModel() {
-    private var loginIntent: LiveData<Intent>? = null
-
-    fun loginWithGoogle(): LiveData<Intent>? {
-        loginIntent = firebaseRepository.loginWithGoogle()
-
-        return loginIntent
-    }
+    fun loginWithGoogle() =
+        firebaseRepository.loginWithGoogle()
 }

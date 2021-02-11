@@ -8,6 +8,7 @@ import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.data.model.Task
 import com.ajailani.projekan.data.repository.FirebaseRepository
 
+/** This ViewModel is used to pass data from ProjectDetailsActivity or MoreFragment */
 class AddTaskViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository
 ) : ViewModel() {

@@ -126,6 +126,26 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                                 }
                             }
                         })
+                } else if (mTag == "Task") {
+                    moreViewModel.deleteTask(mProject.onPage, mProject.itemNum, mTask)
+                        .observe(viewLifecycleOwner, { isTaskDeleted ->
+                        if (isTaskDeleted) {
+                            Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show()
+
+                            moreViewModel.setDeleteTask(true)
+                            this.dismiss()
+                        } else {
+                            Toast.makeText(context, "Unsuccessfully deleted", Toast.LENGTH_SHORT).show()
+
+                            this.isCancelable = true
+
+                            binding.apply {
+                                progressBar.visibility = View.GONE
+                                edit.isEnabled = true
+                                delete.isEnabled = true
+                            }
+                        }
+                    })
                 }
             }
             .setNegativeButton(R.string.no) { dialog, _ ->

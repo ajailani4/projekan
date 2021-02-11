@@ -517,4 +517,14 @@ class FirebaseRepository @Inject constructor(
 
             emit(isSuccessful)
         }
+
+    //Delete task
+    fun deleteTask(page: Int, itemNum: Int, task: Task) =
+        liveData(Dispatchers.IO) {
+            val isSuccessful = apiService.deleteTask(
+                firebaseAuth.currentUser!!.uid, "page$page", itemNum, task.id
+            ).isSuccessful
+
+            emit(isSuccessful)
+        }
 }

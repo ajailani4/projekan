@@ -152,4 +152,13 @@ interface ApiService {
         @Path("taskId") taskId: String?,
         @Body task: Task
     ): Response<Void>
+
+    //Delete task
+    @DELETE("{userId}/projects/{page}/data/{itemNum}/tasks/{taskId}.json")
+    suspend fun deleteTask(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Path("itemNum") itemNum: Int,
+        @Path("taskId") taskId: String?
+    ): Response<Void>
 }
