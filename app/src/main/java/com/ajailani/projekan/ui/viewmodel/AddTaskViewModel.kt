@@ -17,6 +17,12 @@ class AddTaskViewModel @ViewModelInject constructor(
     private val mutableIsTaskAdded = MutableLiveData<Boolean>()
     val isTaskAdded: LiveData<Boolean> get() = mutableIsTaskAdded
 
+    private val mutableTask = MutableLiveData<Task>()
+    val task: LiveData<Task> get() = mutableTask
+
+    private val mutableTag = MutableLiveData<String>()
+    val tag: LiveData<String> get() = mutableTag
+
     fun setProject(project: Project) {
         mutableProject.value = project
     }
@@ -25,6 +31,17 @@ class AddTaskViewModel @ViewModelInject constructor(
         mutableIsTaskAdded.value = isTaskAdded
     }
 
-    fun addTask(task: Task, page: Int, itemNum: Int) =
-        firebaseRepository.addTask(task, page, itemNum)
+    fun setTask(task: Task) {
+        mutableTask.value = task
+    }
+
+    fun setTag(tag: String) {
+        mutableTag.value = tag
+    }
+
+    fun addTask(page: Int, itemNum: Int, task: Task) =
+        firebaseRepository.addTask(page, itemNum, task)
+
+    fun updateTask(page: Int, itemNum: Int, task: Task) =
+        firebaseRepository.updateTask(page, itemNum, task)
 }

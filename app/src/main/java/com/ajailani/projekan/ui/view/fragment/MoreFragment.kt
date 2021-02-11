@@ -10,19 +10,23 @@ import android.widget.Toast
 import androidx.fragment.app.activityViewModels
 import com.ajailani.projekan.R
 import com.ajailani.projekan.data.model.Project
+import com.ajailani.projekan.data.model.Task
 import com.ajailani.projekan.databinding.FragmentMoreBinding
 import com.ajailani.projekan.ui.view.activity.AddProjectActivity
 import com.ajailani.projekan.ui.view.activity.MainActivity
 import com.ajailani.projekan.ui.view.activity.ProjectDetailsActivity
+import com.ajailani.projekan.ui.viewmodel.AddTaskViewModel
 import com.ajailani.projekan.ui.viewmodel.MoreViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
     private lateinit var binding: FragmentMoreBinding
     private val moreViewModel: MoreViewModel by activityViewModels()
+    private val addTaskViewModel: AddTaskViewModel by activityViewModels()
 
-    private var tagMore = ""
-    private var projectMore = Project()
+    private var mTag = ""
+    private var mProject = Project()
+    private var mTask = Task()
 
     companion object {
         const val TAG = "More Fragment"
@@ -47,12 +51,17 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
 
         //Observe tag
         moreViewModel.tag.observe(viewLifecycleOwner, {
-            tagMore = it
+            mTag = it
         })
 
         //Observe project
         moreViewModel.project.observe(viewLifecycleOwner, {
-            projectMore = it
+            mProject = it
+        })
+
+        //Observe task
+        moreViewModel.task.observe(viewLifecycleOwner, {
+            mTask = it
         })
 
         binding.edit.setOnClickListener(this)
@@ -62,13 +71,21 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
     override fun onClick(v: View?) {
         when (v) {
             binding.edit -> {
-                if (tagMore == "Project") {
+                if (mTag == "Project") {
                     val addProjectIntent = Intent(context, AddProjectActivity::class.java)
                     addProjectIntent.putExtra("tag", "Edit")
-                    addProjectIntent.putExtra("project", projectMore)
+                    addProjectIntent.putExtra("project", mProject)
                     startActivity(addProjectIntent)
+                } else if (mTag == "Task") {
+                    //Pass the task in order to AddTaskFragment knows what task will be executed
+                    addTaskViewModel.setTag("Edit")
+                    addTaskViewModel.setTask(mTask)
+
+                    AddTaskFragment().show((activity as ProjectDetailsActivity)
+                        .supportFragmentManager, AddTaskFragment.TAG)
                 }
             }
+
             binding.delete -> {
                 showConfirmDialog()
             }
@@ -85,10 +102,10 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                 binding.edit.isEnabled = false
                 binding.delete.isEnabled = false
 
-                if (tagMore == "Project") {
-                    moreViewModel.setDeleteProject(true)
-                    moreViewModel.deleteProject(projectMore)
-                        .observe(viewLifecycleOwner, { isProjectDeleted ->
+                if (mTag == "Project") {
+                    (activity as ProjectDetailsActivity).binding.deleteProjectMsg.visibility = View.VISIBLE
+
+                    moreViewModel.deleteProject(mProject).observe(viewLifecycleOwner, { isProjectDeleted ->
                             if (isProjectDeleted) {
                                 Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show()
 
@@ -96,16 +113,17 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                                 startActivity(homeIntent)
                                 activity?.finish()
                             } else {
-                                Toast.makeText(
-                                    context,
-                                    "Unsuccessfully deleted",
-                                    Toast.LENGTH_SHORT
-                                ).show()
+                                Toast.makeText(context, "Unsuccessfully deleted", Toast.LENGTH_SHORT).show()
 
                                 this.isCancelable = true
-                                binding.progressBar.visibility = View.GONE
-                                binding.edit.isEnabled = true
-                                binding.delete.isEnabled = true
+
+                                (activity as ProjectDetailsActivity).binding.deleteProjectMsg.visibility = View.GONE
+
+                                binding.apply {
+                                    progressBar.visibility = View.GONE
+                                    edit.isEnabled = true
+                                    delete.isEnabled = true
+                                }
                             }
                         })
                 }

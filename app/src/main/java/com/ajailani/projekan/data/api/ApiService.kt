@@ -40,7 +40,7 @@ interface ApiService {
         @Path("userId") userId: String,
         @Path("page") page: String,
         @Path("itemNum") itemNum: Int
-    ): Response<Project?>
+    ): Response<Project>
 
     /** Add project */
 
@@ -132,5 +132,24 @@ interface ApiService {
         @Path("itemNum") itemNum: Int,
         @Path("taskId") taskId: String,
         @Body status: Map<String, String>
+    ): Response<Void>
+
+    //Update project status
+    @PATCH("{userId}/projects/{page}/data/{itemNum}.json")
+    suspend fun updateProjectStatus(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Path("itemNum") itemNum: Int,
+        @Body status: Map<String, String>
+    ): Response<Void>
+
+    //Update task
+    @PATCH("{userId}/projects/{page}/data/{itemNum}/tasks/{taskId}.json")
+    suspend fun updateTask(
+        @Path("userId") userId: String,
+        @Path("page") page: String,
+        @Path("itemNum") itemNum: Int,
+        @Path("taskId") taskId: String?,
+        @Body task: Task
     ): Response<Void>
 }

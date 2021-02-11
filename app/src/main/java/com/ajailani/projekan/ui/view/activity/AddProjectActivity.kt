@@ -8,6 +8,7 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
@@ -257,7 +258,11 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 Toast.makeText(this, "Unsuccessfully added", Toast.LENGTH_SHORT).show()
 
-                binding.progressBar.root.visibility = View.GONE
+                binding.apply {
+                    inputProjectIcon.isEnabled = true
+                    doneBtn.isEnabled = true
+                    progressBar.root.visibility = View.GONE
+                }
             }
         })
     }
@@ -273,7 +278,11 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
             } else {
                 Toast.makeText(this, "Unsuccessfully added", Toast.LENGTH_SHORT).show()
 
-                binding.progressBar.root.visibility = View.GONE
+                binding.apply {
+                    inputProjectIcon.isEnabled = true
+                    doneBtn.isEnabled = true
+                    progressBar.root.visibility = View.GONE
+                }
             }
         })
     }
@@ -344,7 +353,11 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
             if (project.title.isNotEmpty() && project.desc.isNotEmpty() && project.platform != ""
                 && project.category != "" && project.deadline != ""
             ) {
-                binding.progressBar.root.visibility = View.VISIBLE
+                binding.apply {
+                    inputProjectIcon.isEnabled = false
+                    doneBtn.isEnabled = false
+                    progressBar.root.visibility = View.VISIBLE
+                }
 
                 //This means that we have to upload the icon first, then we put/patch the new project or update the project into database
                 setupAddOrUpdateProject(project)

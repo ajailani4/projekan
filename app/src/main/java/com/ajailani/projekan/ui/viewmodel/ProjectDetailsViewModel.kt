@@ -20,4 +20,7 @@ class ProjectDetailsViewModel @ViewModelInject constructor(
 
     fun updateProjectProgress(page: Int, itemNum: Int) =
         firebaseRepository.updateProjectProgress(page, itemNum)
+
+    fun updateProjectStatus(page: Int, itemNum: Int, status: String) =
+        firebaseRepository.updateProjectStatus(page, itemNum, status)
 }

@@ -1,6 +1,7 @@
 package com.ajailani.projekan.data.repository
 
 import android.content.Intent
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
@@ -21,7 +22,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.ValueEventListener
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit
@@ -259,7 +262,7 @@ class FirebaseRepository @Inject constructor(
     //Delete project
     fun deleteProject(project: Project) =
         liveData(Dispatchers.IO) {
-            var isSuccessful = false
+            var isSuccessful: Boolean
 
             //Update totalItem
             val totalItem = apiService.getProjectTotalItem(
@@ -284,6 +287,8 @@ class FirebaseRepository @Inject constructor(
                 isSuccessful = apiService.updateTotalPage(
                     firebaseAuth.currentUser!!.uid, totalPageBody
                 ).isSuccessful
+
+                emit(isSuccessful)
             }
 
             //Restructure project list and patch it
@@ -299,13 +304,14 @@ class FirebaseRepository @Inject constructor(
                             .child("data")
                             .child("$i")
                             .child("tasks")
-                            .addValueEventListener(object : ValueEventListener {
+                            .addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onDataChange(snapshot: DataSnapshot) {
                                     val tempTasksList = mutableListOf<Task>()
 
                                     snapshot.children.forEach {
                                         val task = it.getValue(Task::class.java)
 
+                                        Log.d("Projekan", "Copying task: $task")
                                         tempTasksList.add(task!!)
                                     }
 
@@ -345,6 +351,12 @@ class FirebaseRepository @Inject constructor(
                 ).isSuccessful
 
                 //Repost tasks list in each item
+                Log.d("Projekan", "Task list: ${tasksListEachItem.size}")
+
+                tasksListEachItem.forEach {
+                    Log.d("Projekan", "Task list: $it")
+                }
+
                 if(tasksListEachItem.isNotEmpty()) {
                     val updatedProjectList = apiService.getMyProjects(
                         firebaseAuth.currentUser!!.uid, "page${project.onPage}"
@@ -353,20 +365,21 @@ class FirebaseRepository @Inject constructor(
                     for ((itemNum, i) in updatedProjectList.withIndex()) {
                         if (i.hasTasks) {
                             for (j in tasksListEachItem[itemNum].indices) {
-                                isSuccessful = apiService.addTask(
+                                Log.d("Projekan", "Adding task: ${tasksListEachItem[itemNum][j]}")
+                                apiService.addTask(
                                     firebaseAuth.currentUser!!.uid, "page${project.onPage}", itemNum, tasksListEachItem[itemNum][j]
-                                ).isSuccessful
+                                )
                             }
                         }
                     }
                 }
-            }
 
-            emit(isSuccessful)
+                emit(isSuccessful)
+            }
         }
 
     //Add task
-    fun addTask(task: Task, page: Int, itemNum: Int) =
+    fun addTask(page: Int, itemNum: Int, task: Task) =
         liveData(Dispatchers.IO) {
             //Set project has tasks
             val hasTasksBody = HashMap<String, Boolean>()
@@ -452,6 +465,10 @@ class FirebaseRepository @Inject constructor(
                     val doneTasksTotal = doneTasksList.size.toFloat()
                     val tasksTotal = snapshot.childrenCount.toFloat()
                     val projectProgress = (doneTasksTotal/tasksTotal) * 100
+                    
+                    Log.d("Projekan progress", "done task : $doneTasksTotal")
+                    Log.d("Projekan progress", "task total : $tasksTotal")
+                    Log.d("Projekan progress", "project progress : $projectProgress")
 
                     /** Update project progress */
                     val projectProgressBody = HashMap<String, Any>()
@@ -479,4 +496,25 @@ class FirebaseRepository @Inject constructor(
 
         return updatedProjectProg
     }
+
+    //Update project status
+    fun updateProjectStatus(page: Int, itemNum: Int, status: String) =
+        CoroutineScope(Dispatchers.IO).launch {
+            val statusBody = HashMap<String, String>()
+            statusBody["status"] = status
+
+            apiService.updateProjectStatus(
+                firebaseAuth.currentUser!!.uid, "page$page", itemNum, statusBody
+            )
+        }
+
+    //Update task
+    fun updateTask(page: Int, itemNum: Int, task: Task) =
+        liveData(Dispatchers.IO) {
+            val isSuccessful = apiService.updateTask(
+                firebaseAuth.currentUser!!.uid, "page$page", itemNum, task.id, task
+            ).isSuccessful
+
+            emit(isSuccessful)
+        }
 }

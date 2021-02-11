@@ -5,6 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.ajailani.projekan.data.model.Project
+import com.ajailani.projekan.data.model.Task
 import com.ajailani.projekan.data.repository.FirebaseRepository
 
 /** This ViewModel is just used to pass data from ProjectDetailsActivity to MoreFragment */
@@ -17,8 +18,8 @@ class MoreViewModel @ViewModelInject constructor(
     private val mutableProject = MutableLiveData<Project>()
     val project: LiveData<Project> get() = mutableProject
 
-    private val mutIsProjectDeleted = MutableLiveData<Boolean>()
-    val isProjectDeleted: LiveData<Boolean> get() = mutIsProjectDeleted
+    private val mutableTask = MutableLiveData<Task>()
+    val task: LiveData<Task> get() = mutableTask
 
     fun setTag(tag: String) {
         mutableTag.value = tag
@@ -28,8 +29,8 @@ class MoreViewModel @ViewModelInject constructor(
         mutableProject.value = project
     }
 
-    fun setDeleteProject(isProjectDeleted: Boolean) {
-        mutIsProjectDeleted.value = isProjectDeleted
+    fun setTask(task: Task) {
+        mutableTask.value = task
     }
 
     fun deleteProject(project: Project) = firebaseRepository.deleteProject(project)

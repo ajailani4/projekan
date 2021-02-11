@@ -235,9 +235,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
-                android:paddingBottom="70dp"
                 android:clipToPadding="false"
                 android:overScrollMode="never"
+                android:paddingBottom="70dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
@@ -298,6 +298,33 @@
                     layout="@layout/shimmer_project_details" />
 
             </com.facebook.shimmer.ShimmerFrameLayout>
+
+            <!-- Deleting project message -->
+            <LinearLayout
+                android:id="@+id/deleteProjectMsg"
+                android:layout_width="match_parent"
+                android:layout_height="360dp"
+                android:layout_marginTop="10dp"
+                android:background="@color/colorDetailBg"
+                android:orientation="vertical"
+                android:gravity="center"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2"
+                app:layout_constraintVertical_bias="0.0">
+
+                <androidx.appcompat.widget.AppCompatTextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"
+                    android:gravity="center|top"
+                    android:fontFamily="@font/open_sans_semibold"
+                    android:text="@string/deleting_project"
+                    android:textColor="@android:color/black"
+                    android:textSize="15sp"/>
+
+            </LinearLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

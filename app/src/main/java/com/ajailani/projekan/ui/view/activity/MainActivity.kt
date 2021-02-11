@@ -1,6 +1,7 @@
 package com.ajailani.projekan.ui.view.activity
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
@@ -30,6 +31,13 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         setupLoadingUI()
         setupView()
+
+        //Refreshing layout
+        binding.swipeRefresh.setColorSchemeColors(Color.rgb(251, 146, 65))
+        binding.swipeRefresh.setOnRefreshListener {
+            setupLoadingUI()
+            setupView()
+        }
     }
 
     private fun setupLoadingUI() {
@@ -42,6 +50,10 @@ class MainActivity : AppCompatActivity() {
             userAvaIv.visibility = View.INVISIBLE
             deadlinedProjectsRv.visibility = View.INVISIBLE
             myProjectsRv.visibility = View.INVISIBLE
+            noDataIv.visibility = View.GONE
+            noDataTv.visibility = View.GONE
+            addYourProjectsIv.visibility = View.GONE
+            addYourProjectsTv.visibility = View.GONE
         }
     }
 
@@ -50,6 +62,7 @@ class MainActivity : AppCompatActivity() {
             shimmerLayout.stopShimmerAnimation()
             shimmerLayout.visibility = View.GONE
 
+            swipeRefresh.isRefreshing = false
             helloUserTv.visibility = View.VISIBLE
             greetingsTv.visibility = View.VISIBLE
             userAvaIv.visibility = View.VISIBLE
@@ -72,13 +85,29 @@ class MainActivity : AppCompatActivity() {
         })
 
         //Show deadlined projects list for header
+        showDeadlinedProjects()
+
+        //Show my projects list
+        showMyProjects()
+
+        //Add project
+        binding.addProject.setOnClickListener {
+            val addProjectIntent = Intent(applicationContext, AddProjectActivity::class.java)
+            addProjectIntent.putExtra("tag", "Add")
+            startActivity(addProjectIntent)
+        }
+    }
+
+    private fun showDeadlinedProjects() {
         lifecycleScope.launch {
             homeViewModel.getDeadlinedProjectsHeader()
                 .observe(this@MainActivity, { deadlinedProjects ->
                     if (deadlinedProjects.isNotEmpty()) {
-                        binding.noDataIv.visibility = View.GONE
-                        binding.noDataTv.visibility = View.GONE
-                        binding.seeMoreTv.visibility = View.VISIBLE
+                        binding.apply {
+                            noDataIv.visibility = View.GONE
+                            noDataTv.visibility = View.GONE
+                            seeMoreTv.visibility = View.VISIBLE
+                        }
 
                         deadlinedProjectsAdapter =
                             DeadlinedProjectsAdapter(deadlinedProjects) { page, itemNum ->
@@ -97,16 +126,19 @@ class MainActivity : AppCompatActivity() {
                             adapter = deadlinedProjectsAdapter
                         }
                     } else {
-                        binding.noDataIv.visibility = View.VISIBLE
-                        binding.noDataTv.visibility = View.VISIBLE
-                        binding.seeMoreTv.visibility = View.INVISIBLE
+                        binding.apply {
+                            noDataIv.visibility = View.VISIBLE
+                            noDataTv.visibility = View.VISIBLE
+                            seeMoreTv.visibility = View.INVISIBLE
+                        }
                     }
 
                     setupLoadedUI()
                 })
         }
+    }
 
-        //Show my projects list
+    private fun showMyProjects() {
         lifecycleScope.launch {
             homeViewModel.getMyProjects().observe(this@MainActivity, { myProjects ->
                 myProjectsAdapter = MyProjectsAdapter { page, itemNum ->
@@ -127,21 +159,18 @@ class MainActivity : AppCompatActivity() {
 
                 myProjectsAdapter.addLoadStateListener { loadState ->
                     if (loadState.source.refresh is LoadState.NotLoading && myProjectsAdapter.itemCount < 1) {
-                        binding.addYourProjectsIv.visibility = View.VISIBLE
-                        binding.addYourProjectsTv.visibility = View.VISIBLE
+                        binding.apply {
+                            addYourProjectsIv.visibility = View.VISIBLE
+                            addYourProjectsTv.visibility = View.VISIBLE
+                        }
                     } else {
-                        binding.addYourProjectsIv.visibility = View.GONE
-                        binding.addYourProjectsTv.visibility = View.GONE
+                        binding.apply {
+                            addYourProjectsIv.visibility = View.GONE
+                            addYourProjectsTv.visibility = View.GONE
+                        }
                     }
                 }
             })
-        }
-
-        //Add project
-        binding.addProject.setOnClickListener {
-            val addProjectIntent = Intent(applicationContext, AddProjectActivity::class.java)
-            addProjectIntent.putExtra("tag", "Add")
-            startActivity(addProjectIntent)
         }
     }
 
