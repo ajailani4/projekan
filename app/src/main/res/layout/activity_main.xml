@@ -107,7 +107,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/appCompatTextView2"
                 tools:visibility="invisible" />
 
-            <!-- No Data -->
+            <!-- No Data (Illustration) -->
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/noDataIv"
                 android:layout_width="170dp"
@@ -161,7 +161,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/appCompatTextView5"
                 tools:listitem="@layout/item_my_project" />
 
-            <!-- Let's add your projects -->
+            <!-- Let's add your projects (Illustration) -->
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/addYourProjectsIv"
                 android:layout_width="220dp"
@@ -185,7 +185,36 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/addYourProjectsIv" />
+                app:layout_constraintTop_toBottomOf="@+id/addYourProjectsIv"
+                app:layout_constraintVertical_bias="0.0" />
+
+            <!-- You are offline (Illustration) -->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/youAreOfflineIv"
+                android:layout_width="220dp"
+                android:layout_height="220dp"
+                android:layout_marginTop="10dp"
+                android:src="@drawable/illustration_offline"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/appCompatTextView5" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/youAreOfflineTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:fontFamily="@font/open_sans_semibold"
+                android:text="@string/you_are_offline"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/youAreOfflineIv"
+                app:layout_constraintVertical_bias="0.0" />
 
             <!-- Add Project -->
             <com.google.android.material.floatingactionbutton.FloatingActionButton

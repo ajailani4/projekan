@@ -5,7 +5,7 @@
     <string name="login_with_google">Login with Google</string>
     <string name="see_your_project">See your projects here</string>
     <string name="deadline">Deadline:</string>
-    <string name="this_week_deadline">This week deadline</string>
+    <string name="this_week_deadline">This week deadlines</string>
     <string name="my_projects">My Projects</string>
     <string name="see_more">See more</string>
     <string name="hello_user">Hi, %s</string>
@@ -31,4 +31,5 @@
     <string name="add_task">Add Task</string>
     <string name="add_some_tasks">Let\'s add some tasks</string>
     <string name="deleting_project">Deleting project...</string>
+    <string name="you_are_offline">You are offline</string>
 </resources>

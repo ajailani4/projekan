@@ -3,30 +3,18 @@ package com.ajailani.projekan.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
-import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.ajailani.projekan.data.model.Project
-import com.ajailani.projekan.databinding.ItemMyProjectBinding
+import com.ajailani.projekan.databinding.ItemDeadlinedProjectBinding
 import com.bumptech.glide.Glide
 
-class DeadlinedProjectsAdapter(
+class DeadlinedProjectsHeaderAdapter(
+    private val deadlinedProjectsList: List<Project>,
     private val listener: (Int, Int) -> Unit
-) : PagingDataAdapter<Project, DeadlinedProjectsAdapter.ViewHolder>(DataDifferentiator) {
-    private lateinit var binding: ItemMyProjectBinding
+) : RecyclerView.Adapter<DeadlinedProjectsHeaderAdapter.ViewHolder>() {
+    private lateinit var binding: ItemDeadlinedProjectBinding
 
-    object DataDifferentiator : DiffUtil.ItemCallback<Project>() {
-        override fun areItemsTheSame(oldItem: Project, newItem: Project): Boolean {
-            return oldItem.id == newItem.id
-        }
-
-        override fun areContentsTheSame(oldItem: Project, newItem: Project): Boolean {
-            return oldItem == newItem
-        }
-
-    }
-
-    class ViewHolder(private val binding: ItemMyProjectBinding) :
+    class ViewHolder(private val binding: ItemDeadlinedProjectBinding) :
         RecyclerView.ViewHolder(binding.root) {
         fun bind(project: Project, listener: (Int, Int) -> Unit) {
             binding.apply {
@@ -40,6 +28,7 @@ class DeadlinedProjectsAdapter(
                     View.VISIBLE else status.visibility = View.INVISIBLE
 
                 title.text = project.title
+                desc.text = project.desc
                 platform.text = project.platform
                 category.text = project.category
                 deadline.text = project.deadline
@@ -52,7 +41,7 @@ class DeadlinedProjectsAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = ItemMyProjectBinding.inflate(
+        binding = ItemDeadlinedProjectBinding.inflate(
             LayoutInflater.from(parent.context), parent, false
         )
 
@@ -60,8 +49,8 @@ class DeadlinedProjectsAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        getItem(position)?.let { project ->
-            holder.bind(project, listener)
-        }
+        holder.bind(deadlinedProjectsList[position], listener)
     }
+
+    override fun getItemCount() = deadlinedProjectsList.size
 }

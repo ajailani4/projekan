@@ -10,6 +10,7 @@ import androidx.paging.PagingConfig
 import androidx.paging.PagingData
 import androidx.paging.liveData
 import com.ajailani.projekan.data.api.ApiService
+import com.ajailani.projekan.data.datasource.DeadlinedProjectsDataSource
 import com.ajailani.projekan.data.datasource.MyProjectsDataSource
 import com.ajailani.projekan.data.model.Page
 import com.ajailani.projekan.data.model.Project
@@ -95,7 +96,7 @@ class FirebaseRepository @Inject constructor(
             }
 
             //Filter deadlined projects
-            for (i in 0 until projectsList.size) {
+            for (i in projectsList.indices) {
                 val sdf = SimpleDateFormat("dd MMM yyyy", Locale.US)
                 val deadline = sdf.parse(projectsList[i].deadline)
                 val curDate = Date()
@@ -114,6 +115,16 @@ class FirebaseRepository @Inject constructor(
 
             emit(deadlinedProjectsList)
         }
+
+    //Get deadlined projects list for See More
+    fun getDeadlinedProjects(): LiveData<PagingData<Project>> {
+        return Pager(
+            config = PagingConfig(enablePlaceholders = false, pageSize = 10),
+            pagingSourceFactory = {
+                DeadlinedProjectsDataSource(apiService, firebaseAuth)
+            }
+        ).liveData
+    }
 
     //Get my projects list with pagination
     fun getMyProjects(): LiveData<PagingData<Project>> {
@@ -445,7 +456,7 @@ class FirebaseRepository @Inject constructor(
     //Update project progress
     fun updateProjectProgress(page: Int, itemNum: Int): LiveData<Boolean> {
         val updatedProjectProg = MutableLiveData<Boolean>()
-        val doneTasksList = mutableListOf<Task>()
+        var doneTasksList = 0
 
         /** Count project progress */
         dbReference.child(firebaseAuth.currentUser!!.uid)
@@ -459,10 +470,10 @@ class FirebaseRepository @Inject constructor(
                     snapshot.children.forEach {
                         val task = it.getValue(Task::class.java)
 
-                        if (task?.status == "done") doneTasksList.add(task)
+                        if (task?.status == "done") doneTasksList++
                     }
 
-                    val doneTasksTotal = doneTasksList.size.toFloat()
+                    val doneTasksTotal = doneTasksList.toFloat()
                     val tasksTotal = snapshot.childrenCount.toFloat()
                     val projectProgress = (doneTasksTotal/tasksTotal) * 100
                     

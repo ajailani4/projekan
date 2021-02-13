@@ -7,17 +7,11 @@ import androidx.paging.cachedIn
 import com.ajailani.projekan.data.repository.FirebaseRepository
 import com.ajailani.projekan.utils.NetworkHelper
 
-class HomeViewModel @ViewModelInject constructor(
+class DeadlinedProjectsViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository,
     private val networkHelper: NetworkHelper
-) : ViewModel() {
+): ViewModel() {
     fun isNetworkConnected() = networkHelper.isNetworkConnected()
 
-    fun getUserName() = firebaseRepository.getUserName()
-
-    fun getUserAva() = firebaseRepository.getUserAva()
-
-    fun getDeadlinedProjectsHeader() = firebaseRepository.getDeadlinedProjectsHeader()
-
-    fun getMyProjects() = firebaseRepository.getMyProjects().cachedIn(viewModelScope)
+    fun getDeadlinedProjects() = firebaseRepository.getDeadlinedProjects().cachedIn(viewModelScope)
 }

@@ -11,7 +11,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajailani.projekan.R
 import com.ajailani.projekan.databinding.ActivityMainBinding
-import com.ajailani.projekan.ui.adapter.DeadlinedProjectsAdapter
+import com.ajailani.projekan.ui.adapter.DeadlinedProjectsHeaderAdapter
 import com.ajailani.projekan.ui.adapter.MyProjectsAdapter
 import com.ajailani.projekan.ui.viewmodel.HomeViewModel
 import com.bumptech.glide.Glide
@@ -22,7 +22,7 @@ import kotlinx.coroutines.launch
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private val homeViewModel: HomeViewModel by viewModels()
-    private lateinit var deadlinedProjectsAdapter: DeadlinedProjectsAdapter
+    private lateinit var deadlinedProjectsAdapter: DeadlinedProjectsHeaderAdapter
     private lateinit var myProjectsAdapter: MyProjectsAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,6 +54,8 @@ class MainActivity : AppCompatActivity() {
             noDataTv.visibility = View.GONE
             addYourProjectsIv.visibility = View.GONE
             addYourProjectsTv.visibility = View.GONE
+            youAreOfflineIv.visibility = View.GONE
+            youAreOfflineTv.visibility = View.GONE
         }
     }
 
@@ -68,33 +70,55 @@ class MainActivity : AppCompatActivity() {
             userAvaIv.visibility = View.VISIBLE
             deadlinedProjectsRv.visibility = View.VISIBLE
             myProjectsRv.visibility = View.VISIBLE
+            addProject.visibility = View.VISIBLE
         }
     }
 
     private fun setupView() {
-        //Show user's name
-        homeViewModel.getUserName().observe(this, { userName ->
-            binding.helloUserTv.text = getString(R.string.hello_user, userName)
-        })
+        if (homeViewModel.isNetworkConnected()) {
+            //Show user's name
+            homeViewModel.getUserName().observe(this, { userName ->
+                binding.helloUserTv.text = getString(R.string.hello_user, userName)
+            })
 
-        //Show user's ava
-        homeViewModel.getUserAva().observe(this, { userAva ->
-            Glide.with(this)
-                .load(userAva)
-                .into(binding.userAvaIv)
-        })
+            //Show user's ava
+            homeViewModel.getUserAva().observe(this, { userAva ->
+                Glide.with(this)
+                    .load(userAva)
+                    .into(binding.userAvaIv)
+            })
 
-        //Show deadlined projects list for header
-        showDeadlinedProjects()
+            //Show deadlined projects list for header
+            showDeadlinedProjects()
 
-        //Show my projects list
-        showMyProjects()
+            //Show my projects list
+            showMyProjects()
 
-        //Add project
-        binding.addProject.setOnClickListener {
-            val addProjectIntent = Intent(applicationContext, AddProjectActivity::class.java)
-            addProjectIntent.putExtra("tag", "Add")
-            startActivity(addProjectIntent)
+            //Add project
+            binding.addProject.setOnClickListener {
+                val addProjectIntent = Intent(applicationContext, AddProjectActivity::class.java)
+                addProjectIntent.putExtra("tag", "Add")
+                startActivity(addProjectIntent)
+            }
+
+            //See More
+            binding.seeMoreTv.setOnClickListener {
+                val deadlinedProjectsIntent = Intent(applicationContext, DeadlinedProjectsActivity::class.java)
+                startActivity(deadlinedProjectsIntent)
+            }
+        } else {
+            binding.apply {
+                shimmerLayout.stopShimmerAnimation()
+                shimmerLayout.visibility = View.GONE
+
+                swipeRefresh.isRefreshing = false
+                noDataIv.visibility = View.VISIBLE
+                noDataTv.visibility = View.VISIBLE
+                youAreOfflineIv.visibility = View.VISIBLE
+                youAreOfflineTv.visibility = View.VISIBLE
+                seeMoreTv.visibility = View.INVISIBLE
+                addProject.visibility = View.INVISIBLE
+            }
         }
     }
 
@@ -110,7 +134,7 @@ class MainActivity : AppCompatActivity() {
                         }
 
                         deadlinedProjectsAdapter =
-                            DeadlinedProjectsAdapter(deadlinedProjects) { page, itemNum ->
+                            DeadlinedProjectsHeaderAdapter(deadlinedProjects) { page, itemNum ->
                                 //Go to ProjectDetailsActivity
                                 val projectDetailsIntent =
                                     Intent(applicationContext, ProjectDetailsActivity::class.java)
@@ -139,39 +163,38 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun showMyProjects() {
-        lifecycleScope.launch {
-            homeViewModel.getMyProjects().observe(this@MainActivity, { myProjects ->
-                myProjectsAdapter = MyProjectsAdapter { page, itemNum ->
-                    //Go to ProjectDetailsActivity
-                    val projectDetailsIntent =
-                        Intent(applicationContext, ProjectDetailsActivity::class.java)
-                    projectDetailsIntent.putExtra("page", page)
-                    projectDetailsIntent.putExtra("itemNum", itemNum)
-                    startActivity(projectDetailsIntent)
-                }
+        homeViewModel.getMyProjects().observe(this@MainActivity, { myProjects ->
+            myProjectsAdapter = MyProjectsAdapter { page, itemNum ->
+                //Go to ProjectDetailsActivity
+                val projectDetailsIntent =
+                    Intent(applicationContext, ProjectDetailsActivity::class.java)
+                projectDetailsIntent.putExtra("page", page)
+                projectDetailsIntent.putExtra("itemNum", itemNum)
+                startActivity(projectDetailsIntent)
+            }
 
-                binding.myProjectsRv.apply {
-                    layoutManager = LinearLayoutManager(context)
-                    adapter = myProjectsAdapter
-                }
+            binding.myProjectsRv.apply {
+                layoutManager = LinearLayoutManager(context)
+                adapter = myProjectsAdapter
+            }
 
-                myProjectsAdapter.submitData(this@MainActivity.lifecycle, myProjects)
+            myProjectsAdapter.submitData(this@MainActivity.lifecycle, myProjects)
 
-                myProjectsAdapter.addLoadStateListener { loadState ->
-                    if (loadState.source.refresh is LoadState.NotLoading && myProjectsAdapter.itemCount < 1) {
-                        binding.apply {
-                            addYourProjectsIv.visibility = View.VISIBLE
-                            addYourProjectsTv.visibility = View.VISIBLE
-                        }
-                    } else {
-                        binding.apply {
-                            addYourProjectsIv.visibility = View.GONE
-                            addYourProjectsTv.visibility = View.GONE
-                        }
+            //Handling load state
+            myProjectsAdapter.addLoadStateListener { loadState ->
+                if (loadState.source.refresh is LoadState.NotLoading && myProjectsAdapter.itemCount < 1) {
+                    binding.apply {
+                        addYourProjectsIv.visibility = View.VISIBLE
+                        addYourProjectsTv.visibility = View.VISIBLE
+                    }
+                } else {
+                    binding.apply {
+                        addYourProjectsIv.visibility = View.GONE
+                        addYourProjectsTv.visibility = View.GONE
                     }
                 }
-            })
-        }
+            }
+        })
     }
 
     override fun onBackPressed() {

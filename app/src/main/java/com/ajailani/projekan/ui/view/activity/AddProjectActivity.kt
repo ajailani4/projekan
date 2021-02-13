@@ -8,7 +8,6 @@ import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewTreeObserver
@@ -20,8 +19,8 @@ import com.ajailani.projekan.R
 import com.ajailani.projekan.data.model.Project
 import com.ajailani.projekan.databinding.ActivityAddProjectBinding
 import com.ajailani.projekan.ui.viewmodel.AddProjectViewModel
-import com.ajailani.projekan.utils.CategoryList
-import com.ajailani.projekan.utils.PlatformList
+import com.ajailani.projekan.utils.locallist.CategoryList
+import com.ajailani.projekan.utils.locallist.PlatformList
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException

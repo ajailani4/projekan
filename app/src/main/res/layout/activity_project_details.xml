@@ -308,6 +308,7 @@
                 android:background="@color/colorDetailBg"
                 android:orientation="vertical"
                 android:gravity="center"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -325,6 +326,35 @@
                     android:textSize="15sp"/>
 
             </LinearLayout>
+
+            <!-- You are offline (Illustration) -->
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/youAreOfflineIv"
+                android:layout_width="250dp"
+                android:layout_height="250dp"
+                android:layout_marginTop="180dp"
+                android:src="@drawable/illustration_offline"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="@+id/constraintLayout" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/youAreOfflineTv"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="30dp"
+                android:fontFamily="@font/open_sans_semibold"
+                android:text="@string/you_are_offline"
+                android:textColor="@android:color/black"
+                android:textSize="16sp"
+                android:visibility="gone"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/youAreOfflineIv"
+                app:layout_constraintVertical_bias="0.0" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.core.widget.NestedScrollView>

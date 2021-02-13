@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.ajailani.projekan">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -13,14 +14,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Projekan">
         <activity
+            android:name=".ui.view.activity.DeadlinedProjectsActivity"
+            android:parentActivityName=".ui.view.activity.MainActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ui.view.activity.MainActivity"/>
+        </activity>
+        <activity
             android:name=".ui.view.activity.ProjectDetailsActivity"
             android:parentActivityName=".ui.view.activity.MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.view.activity.MainActivity" />
         </activity>
-        <activity
-            android:name=".ui.view.activity.AddProjectActivity" />
+        <activity android:name=".ui.view.activity.AddProjectActivity" />
         <activity android:name=".ui.view.activity.LoginActivity" />
         <activity
             android:name=".ui.view.activity.SplashActivity"

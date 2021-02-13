@@ -57,7 +57,9 @@ class AddTaskFragment : BottomSheetDialogFragment() {
             mTask = it
 
             //Fill the inputTitle
-            binding.inputTitle.setText(mTask.title)
+            if (mTag == "Edit") {
+                binding.inputTitle.setText(mTask.title)
+            }
         })
 
         //When doneBtn is clicked

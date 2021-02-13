@@ -106,7 +106,7 @@
     <!-- Tasks -->
     <include
         android:id="@+id/include"
-        layout="@layout/shimmer_tasks"
+        layout="@layout/shimmer_item_tasks"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="115dp"
@@ -118,7 +118,7 @@
 
     <include
         android:id="@+id/include2"
-        layout="@layout/shimmer_tasks"
+        layout="@layout/shimmer_item_tasks"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"
@@ -129,7 +129,7 @@
         app:layout_constraintTop_toBottomOf="@+id/include" />
 
     <include
-        layout="@layout/shimmer_tasks"
+        layout="@layout/shimmer_item_tasks"
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:layout_marginTop="20dp"

@@ -42,7 +42,7 @@
     <!-- This week deadline -->
     <include
         android:id="@+id/include"
-        layout="@layout/shimmer_deadlined_projects"
+        layout="@layout/shimmer_item_deadlined_projects_header"
         android:layout_width="295dp"
         android:layout_height="185dp"
         android:layout_marginStart="20dp"
@@ -51,7 +51,7 @@
         app:layout_constraintTop_toBottomOf="@+id/greetingsTv" />
 
     <include
-        layout="@layout/shimmer_deadlined_projects"
+        layout="@layout/shimmer_item_deadlined_projects_header"
         android:layout_width="295dp"
         android:layout_height="185dp"
         android:layout_marginStart="20dp"
@@ -62,7 +62,7 @@
     <!-- My Projects -->
     <include
         android:id="@+id/include2"
-        layout="@layout/shimmer_my_projects"
+        layout="@layout/shimmer_item_my_projects"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_marginStart="20dp"
@@ -74,7 +74,7 @@
         app:layout_constraintTop_toBottomOf="@+id/include" />
 
     <include
-        layout="@layout/shimmer_my_projects"
+        layout="@layout/shimmer_item_my_projects"
         android:layout_width="match_parent"
         android:layout_height="140dp"
         android:layout_marginStart="20dp"

@@ -3,10 +3,15 @@ package com.ajailani.projekan.ui.viewmodel
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.ViewModel
 import com.ajailani.projekan.data.repository.FirebaseRepository
+import com.ajailani.projekan.utils.NetworkHelper
 
 class ProjectDetailsViewModel @ViewModelInject constructor(
-    private val firebaseRepository: FirebaseRepository
+    private val firebaseRepository: FirebaseRepository,
+    private val networkHelper: NetworkHelper
 ) : ViewModel() {
+    fun isNetworkConnected() =
+        networkHelper.isNetworkConnected()
+
     fun getProjectDetails(page: Int, itemNum: Int) =
         firebaseRepository.getProjectDetails(page, itemNum)
 
