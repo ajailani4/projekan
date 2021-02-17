@@ -203,7 +203,7 @@
                     android:layout_height="match_parent"
                     android:adjustViewBounds="true"
                     android:scaleType="centerCrop"
-                    android:src="@drawable/background_platform" />
+                    android:src="@drawable/default_project_icon" />
 
             </androidx.cardview.widget.CardView>
 

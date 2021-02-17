@@ -3,6 +3,7 @@ package com.ajailani.projekan.ui.view.activity
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
@@ -191,6 +192,10 @@ class MainActivity : AppCompatActivity() {
                     binding.apply {
                         addYourProjectsIv.visibility = View.GONE
                         addYourProjectsTv.visibility = View.GONE
+                    }
+
+                    if (loadState.append.endOfPaginationReached) {
+                        Log.d("Projekan", "End of pagination of my projects")
                     }
                 }
             }
