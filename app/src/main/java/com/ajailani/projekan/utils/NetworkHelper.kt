@@ -10,11 +10,13 @@ import javax.inject.Inject
 class NetworkHelper @Inject constructor(@ApplicationContext private val context: Context) {
     fun isNetworkConnected(): Boolean {
         var result = true
-        val connectivityManager = context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        val connectivityManager =
+            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val networkCapabilities =  connectivityManager.activeNetwork ?: return false
-            val activeNetwork = connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
+            val networkCapabilities = connectivityManager.activeNetwork ?: return false
+            val activeNetwork =
+                connectivityManager.getNetworkCapabilities(networkCapabilities) ?: return false
 
             result =
                 when {
@@ -28,7 +30,7 @@ class NetworkHelper @Inject constructor(@ApplicationContext private val context:
             connectivityManager.run {
                 connectivityManager.activeNetworkInfo?.run {
                     result =
-                        when(type) {
+                        when (type) {
                             ConnectivityManager.TYPE_WIFI -> true
                             ConnectivityManager.TYPE_MOBILE -> true
                             ConnectivityManager.TYPE_ETHERNET -> true

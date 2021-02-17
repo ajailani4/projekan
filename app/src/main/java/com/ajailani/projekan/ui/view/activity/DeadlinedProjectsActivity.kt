@@ -1,18 +1,16 @@
 package com.ajailani.projekan.ui.view.activity
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.lifecycle.lifecycleScope
+import androidx.appcompat.app.AppCompatActivity
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.ajailani.projekan.databinding.ActivityDeadlinedProjectsBinding
 import com.ajailani.projekan.ui.adapter.DeadlinedProjectsAdapter
 import com.ajailani.projekan.ui.viewmodel.DeadlinedProjectsViewModel
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class DeadlinedProjectsActivity : AppCompatActivity() {

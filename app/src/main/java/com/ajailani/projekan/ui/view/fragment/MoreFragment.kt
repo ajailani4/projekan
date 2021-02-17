@@ -81,8 +81,10 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                     addTaskViewModel.setTag("Edit")
                     addTaskViewModel.setTask(mTask)
 
-                    AddTaskFragment().show((activity as ProjectDetailsActivity)
-                        .supportFragmentManager, AddTaskFragment.TAG)
+                    AddTaskFragment().show(
+                        (activity as ProjectDetailsActivity)
+                            .supportFragmentManager, AddTaskFragment.TAG
+                    )
                 }
             }
 
@@ -103,21 +105,29 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                 binding.delete.isEnabled = false
 
                 if (mTag == "Project") {
-                    (activity as ProjectDetailsActivity).binding.deleteProjectMsg.visibility = View.VISIBLE
+                    (activity as ProjectDetailsActivity).binding.deleteProjectMsg.visibility =
+                        View.VISIBLE
 
-                    moreViewModel.deleteProject(mProject).observe(viewLifecycleOwner, { isProjectDeleted ->
+                    moreViewModel.deleteProject(mProject)
+                        .observe(viewLifecycleOwner, { isProjectDeleted ->
                             if (isProjectDeleted) {
-                                Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT)
+                                    .show()
 
                                 val homeIntent = Intent(context, MainActivity::class.java)
                                 startActivity(homeIntent)
                                 activity?.finish()
                             } else {
-                                Toast.makeText(context, "Unsuccessfully deleted", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(
+                                    context,
+                                    "Unsuccessfully deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
                                 this.isCancelable = true
 
-                                (activity as ProjectDetailsActivity).binding.deleteProjectMsg.visibility = View.GONE
+                                (activity as ProjectDetailsActivity).binding.deleteProjectMsg.visibility =
+                                    View.GONE
 
                                 binding.apply {
                                     progressBar.visibility = View.GONE
@@ -129,23 +139,28 @@ class MoreFragment : BottomSheetDialogFragment(), View.OnClickListener {
                 } else if (mTag == "Task") {
                     moreViewModel.deleteTask(mProject.onPage, mProject.itemNum, mTask)
                         .observe(viewLifecycleOwner, { isTaskDeleted ->
-                        if (isTaskDeleted) {
-                            Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT).show()
+                            if (isTaskDeleted) {
+                                Toast.makeText(context, "Successfully deleted", Toast.LENGTH_SHORT)
+                                    .show()
 
-                            moreViewModel.setDeleteTask(true)
-                            this.dismiss()
-                        } else {
-                            Toast.makeText(context, "Unsuccessfully deleted", Toast.LENGTH_SHORT).show()
+                                moreViewModel.setDeleteTask(true)
+                                this.dismiss()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    "Unsuccessfully deleted",
+                                    Toast.LENGTH_SHORT
+                                ).show()
 
-                            this.isCancelable = true
+                                this.isCancelable = true
 
-                            binding.apply {
-                                progressBar.visibility = View.GONE
-                                edit.isEnabled = true
-                                delete.isEnabled = true
+                                binding.apply {
+                                    progressBar.visibility = View.GONE
+                                    edit.isEnabled = true
+                                    delete.isEnabled = true
+                                }
                             }
-                        }
-                    })
+                        })
                 }
             }
             .setNegativeButton(R.string.no) { dialog, _ ->

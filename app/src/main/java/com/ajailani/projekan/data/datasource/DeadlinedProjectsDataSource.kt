@@ -4,7 +4,6 @@ import androidx.paging.PagingSource
 import com.ajailani.projekan.data.api.ApiService
 import com.ajailani.projekan.data.model.Project
 import com.google.firebase.auth.FirebaseAuth
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import java.util.concurrent.TimeUnit

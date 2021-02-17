@@ -368,7 +368,7 @@ class FirebaseRepository @Inject constructor(
                     Log.d("Projekan", "Task list: $it")
                 }
 
-                if(tasksListEachItem.isNotEmpty()) {
+                if (tasksListEachItem.isNotEmpty()) {
                     val updatedProjectList = apiService.getMyProjects(
                         firebaseAuth.currentUser!!.uid, "page${project.onPage}"
                     ).body() ?: emptyList()
@@ -378,7 +378,10 @@ class FirebaseRepository @Inject constructor(
                             for (j in tasksListEachItem[itemNum].indices) {
                                 Log.d("Projekan", "Adding task: ${tasksListEachItem[itemNum][j]}")
                                 apiService.addTask(
-                                    firebaseAuth.currentUser!!.uid, "page${project.onPage}", itemNum, tasksListEachItem[itemNum][j]
+                                    firebaseAuth.currentUser!!.uid,
+                                    "page${project.onPage}",
+                                    itemNum,
+                                    tasksListEachItem[itemNum][j]
                                 )
                             }
                         }
@@ -475,8 +478,8 @@ class FirebaseRepository @Inject constructor(
 
                     val doneTasksTotal = doneTasksList.toFloat()
                     val tasksTotal = snapshot.childrenCount.toFloat()
-                    val projectProgress = (doneTasksTotal/tasksTotal) * 100
-                    
+                    val projectProgress = (doneTasksTotal / tasksTotal) * 100
+
                     Log.d("Projekan progress", "done task : $doneTasksTotal")
                     Log.d("Projekan progress", "task total : $tasksTotal")
                     Log.d("Projekan progress", "project progress : $projectProgress")

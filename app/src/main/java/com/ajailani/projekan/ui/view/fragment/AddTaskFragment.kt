@@ -84,35 +84,37 @@ class AddTaskFragment : BottomSheetDialogFragment() {
 
     private fun addOrEditTask(page: Int, itemNum: Int, task: Task) {
         if (mTag == "Add") {
-            addTaskViewModel.addTask(page, itemNum, task).observe(viewLifecycleOwner, { isTaskAdded ->
-                if (isTaskAdded) {
-                    Toast.makeText(context, "Successfully added", Toast.LENGTH_SHORT).show()
+            addTaskViewModel.addTask(page, itemNum, task)
+                .observe(viewLifecycleOwner, { isTaskAdded ->
+                    if (isTaskAdded) {
+                        Toast.makeText(context, "Successfully added", Toast.LENGTH_SHORT).show()
 
-                    addTaskViewModel.setAddTask(true)
-                    this.dismiss()
-                } else {
-                    Toast.makeText(context, "Unsuccessfully added", Toast.LENGTH_SHORT).show()
+                        addTaskViewModel.setAddTask(true)
+                        this.dismiss()
+                    } else {
+                        Toast.makeText(context, "Unsuccessfully added", Toast.LENGTH_SHORT).show()
 
-                    this.isCancelable = true
-                    binding.doneBtn.isEnabled = true
-                    binding.progressBar.visibility = View.GONE
-                }
-            })
+                        this.isCancelable = true
+                        binding.doneBtn.isEnabled = true
+                        binding.progressBar.visibility = View.GONE
+                    }
+                })
         } else if (mTag == "Edit") {
 
-            addTaskViewModel.updateTask(page, itemNum, task).observe(viewLifecycleOwner, { isTaskUpdated ->
-                if (isTaskUpdated) {
-                    Toast.makeText(context, "Successfully updated", Toast.LENGTH_SHORT).show()
+            addTaskViewModel.updateTask(page, itemNum, task)
+                .observe(viewLifecycleOwner, { isTaskUpdated ->
+                    if (isTaskUpdated) {
+                        Toast.makeText(context, "Successfully updated", Toast.LENGTH_SHORT).show()
 
-                    this.dismiss()
-                } else {
-                    Toast.makeText(context, "Unsuccessfully updated", Toast.LENGTH_SHORT).show()
+                        this.dismiss()
+                    } else {
+                        Toast.makeText(context, "Unsuccessfully updated", Toast.LENGTH_SHORT).show()
 
-                    this.isCancelable = true
-                    binding.doneBtn.isEnabled = true
-                    binding.progressBar.visibility = View.GONE
-                }
-            })
+                        this.isCancelable = true
+                        binding.doneBtn.isEnabled = true
+                        binding.progressBar.visibility = View.GONE
+                    }
+                })
         }
     }
 }

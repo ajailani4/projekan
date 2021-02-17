@@ -10,7 +10,7 @@ import com.ajailani.projekan.utils.NetworkHelper
 class DeadlinedProjectsViewModel @ViewModelInject constructor(
     private val firebaseRepository: FirebaseRepository,
     private val networkHelper: NetworkHelper
-): ViewModel() {
+) : ViewModel() {
     fun isNetworkConnected() = networkHelper.isNetworkConnected()
 
     fun getDeadlinedProjects() = firebaseRepository.getDeadlinedProjects().cachedIn(viewModelScope)

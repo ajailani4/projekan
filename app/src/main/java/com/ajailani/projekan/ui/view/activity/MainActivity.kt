@@ -104,7 +104,8 @@ class MainActivity : AppCompatActivity() {
 
             //See More
             binding.seeMoreTv.setOnClickListener {
-                val deadlinedProjectsIntent = Intent(applicationContext, DeadlinedProjectsActivity::class.java)
+                val deadlinedProjectsIntent =
+                    Intent(applicationContext, DeadlinedProjectsActivity::class.java)
                 startActivity(deadlinedProjectsIntent)
             }
         } else {

@@ -22,7 +22,7 @@ class LoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         binding.loginBtn.setOnClickListener {
-            loginViewModel.loginWithGoogle()?.observe(this, { loginIntent ->
+            loginViewModel.loginWithGoogle().observe(this, { loginIntent ->
                 startActivityForResult(loginIntent, RC_SIGN_IN)
             })
         }

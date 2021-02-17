@@ -14,7 +14,11 @@ class TasksAdapter(
     private lateinit var binding: ItemTaskBinding
 
     class ViewHolder(private val binding: ItemTaskBinding) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(task: Task, statusListener: (String, String) -> Unit, moreListener: (Task) -> Unit) {
+        fun bind(
+            task: Task,
+            statusListener: (String, String) -> Unit,
+            moreListener: (Task) -> Unit
+        ) {
             binding.apply {
                 title.text = task.title
 
