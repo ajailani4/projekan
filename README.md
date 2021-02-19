@@ -13,16 +13,32 @@ This app uses MVVM as its architecture pattern. The libraries that this app uses
 
 ## Preview
 ###### Home
-![Home](https://i.postimg.cc/jD1SsWWK/01-Home.jpg)
+![Home](https://firebasestorage.googleapis.com/v0/b/projekan-142f8.appspot.com/o/Screenshots%2F01%20Home.jpg?alt=media&token=8cb41198-dcc6-4c5a-8a74-4b17ac1c0f91)
 
 ###### Project Details
-![Project Details](https://i.postimg.cc/VSbL5YMt/02-Project-Details.jpg)
+![Project Details](https://firebasestorage.googleapis.com/v0/b/projekan-142f8.appspot.com/o/Screenshots%2F02%20Project%20Details.jpg?alt=media&token=c33abfff-2bd4-4df7-97be-6d912a907593)
 
 ###### Add Task
-![Add Task](https://i.postimg.cc/jw0q7GQF/03-Add-New-Task.jpg)
+![Add Task](https://firebasestorage.googleapis.com/v0/b/projekan-142f8.appspot.com/o/Screenshots%2F02%20Project%20Details.jpg?alt=media&token=c33abfff-2bd4-4df7-97be-6d912a907593)
 
 ###### Add Project
-![Add Project](https://i.postimg.cc/VrqfBDKL/04-Add-New-Project.jpg)
+![Add Project](https://firebasestorage.googleapis.com/v0/b/projekan-142f8.appspot.com/o/Screenshots%2F04%20Add%20New%20Project.jpg?alt=media&token=f676a961-f975-400e-b99e-27836b90da41)
 
 ###### Deadlined Projects List
-![Add Project](https://i.postimg.cc/zHqJdKQw/05-Deadlined-Projects.jpg)
+![Add Project](https://firebasestorage.googleapis.com/v0/b/projekan-142f8.appspot.com/o/Screenshots%2F05%20Deadlined%20Projects.jpg?alt=media&token=66202cb6-f334-42c1-af95-4a08a35b392a)
+
+## Installation and Usage
+Download the zip from this repository or use git clone on your terminal.
+
+```bash
+git clone https://github.com/ajailani4/projekan.git
+```
+Then, run it on your android emulator or physical device.
+
+## Contributing
+Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
+
+Please make sure to update tests as appropriate.
+
+## License
+[MIT](https://choosealicense.com/licenses/mit/)
