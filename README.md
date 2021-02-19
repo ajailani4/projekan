@@ -10,3 +10,19 @@ This app uses MVVM as its architecture pattern. The libraries that this app uses
 3. Add, edit, and delete project
 4. Add, edit, and delete task
 5. Project details that can track your project progress based on how many tasks that you have done.
+
+## Preview
+###### Home
+![Home](https://i.postimg.cc/jD1SsWWK/01-Home.jpg)
+
+###### Project Details
+![Project Details](https://i.postimg.cc/VSbL5YMt/02-Project-Details.jpg)
+
+###### Add Task
+![Add Task](https://i.postimg.cc/jw0q7GQF/03-Add-New-Task.jpg)
+
+###### Add Project
+![Add Project](https://i.postimg.cc/VrqfBDKL/04-Add-New-Project.jpg)
+
+###### Deadlined Projects List
+![Add Project](https://i.postimg.cc/zHqJdKQw/05-Deadlined-Projects.jpg)
