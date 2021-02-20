@@ -2,7 +2,7 @@
 Projekan is a simple project management app. You can manage your projects such as application, website, game, or UI/UX design. Then, you can track your project progress based on how many tasks that you have done. Also, this app has simple design and very easy to use, so that you can manage your projects easily.
 
 ## Notes
-This app uses MVVM as its architecture pattern. The libraries used in this app are Paging 3, Dagger Hilt, Retrofit, and Firebase Realtime Database.
+This app uses MVVM as its architecture pattern. The libraries used in this app are Paging 3, Dagger Hilt, Retrofit. For the database, this app uses Firebase Realtime Database.
 
 ## Features
 1. Read all projects
