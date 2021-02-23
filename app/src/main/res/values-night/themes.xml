@@ -1,16 +1,63 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Theme.Projekan" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
+    <style name="Theme.Projekan" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryVariant">@color/colorPrimaryDark</item>
-        <item name="colorOnPrimary">@color/black</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:fontFamily">@font/open_sans</item>
         <!-- Secondary brand color. -->
-        <item name="colorSecondary">@color/teal_200</item>
-        <item name="colorSecondaryVariant">@color/teal_200</item>
+        <item name="colorSecondary">@color/colorPrimary</item>
+        <item name="colorSecondaryVariant">@color/colorPrimary</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <!-- Customize your theme here. -->
     </style>
+
+    <!-- Splash Screen Theme -->
+    <style name="SplashTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="android:windowBackground">@drawable/background_splash</item>
+    </style>
+
+    <!-- Toolbar Theme -->
+    <style name="CustomToolbar" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="android:fontFamily">@font/open_sans_semibold</item>
+    </style>
+
+    <!-- Custom Chip Choice -->
+    <style name="CustomChipChoice" parent="@style/Widget.MaterialComponents.Chip.Choice">
+        <item name="chipBackgroundColor">@color/chip_button_color</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+    </style>
+
+    <!-- Custom Chip Text Font -->
+    <style name="CustomChipFont" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="fontFamily">@font/open_sans_semibold</item>
+        <item name="android:textColor">@color/colorGrey</item>
+    </style>
+
+    <!-- Custom BottomSheetDialog for MoreFragment-->
+    <style name="CustomMoreDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+    </style>
+
+    <!-- Custom BottomSheetDialog for AddTaskFragment-->
+    <style name="AddTaskDialogBg" parent="@style/Widget.Design.BottomSheet.Modal">
+        <item name="android:background">@drawable/background_add_task</item>
+    </style>
+
+    <style name="CustomAddTaskDialog" parent="@style/Theme.Design.Light.BottomSheetDialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="colorAccent">@color/colorPrimary</item>
+        <item name="bottomSheetStyle">@style/AddTaskDialogBg</item>
+    </style>
+
+    <!-- Custom CheckBox -->
+    <style name="CustomCheckBox" parent="Widget.AppCompat.CompoundButton.CheckBox">
+        <item name="android:button">@drawable/circle_check_box</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
+
 </resources>

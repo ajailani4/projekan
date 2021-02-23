@@ -309,7 +309,7 @@ class AddProjectActivity : AppCompatActivity(), View.OnClickListener {
                     R.style.SpinnerDatePickerStyle,
                     { _, year, month, dayOfMonth ->
                         val deadlineDate =
-                            "$dayOfMonth ${DateFormatSymbols().months[month].substring(0, 3)} $year"
+                            "$dayOfMonth ${DateFormatSymbols(Locale.US).months[month].substring(0, 3)} $year"
                         deadline = deadlineDate
 
                         binding.inputDeadline.setText(deadlineDate)
