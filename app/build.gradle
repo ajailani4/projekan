@@ -14,8 +14,8 @@ android {
         applicationId "com.ajailani.projekan"
         minSdkVersion 19
         targetSdkVersion 30
-        versionCode 2
-        versionName "1.0"
+        versionCode 4
+        versionName "1.0.1"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
